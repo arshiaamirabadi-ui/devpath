@@ -13,3 +13,5 @@
 @media(max-width:760px){.sidebar{visibility:hidden}.sidebar.is-open{visibility:visible}.graph-scroll{max-height:650px}.zoom-tools button{padding:7px 10px}.diagram-controls .search-field input{font-size:11px}}
 @media(max-width:520px){.diagram-controls{padding:16px}.diagram-tools{gap:14px}.diagram-tools>label{width:100%;justify-content:space-between}.diagram-tools select{width:210px;font-size:11px}.zoom-tools{width:100%;justify-content:space-between}.graph-scroll{max-height:580px}.graph-tip{font-size:9px}.graph-foot{font-size:9px}.diagram-controls>.muted{font-size:10px}.graph-detail .panel{padding:18px}}
 .graph-node.dimmed{opacity:1;background:var(--surface);color:var(--muted);border-color:var(--line);box-shadow:none}.graph-node.dimmed .graph-node-meta{opacity:1}
+
+.brand{font-size:24px;letter-spacing:-.5px}@media(max-width:1000px){.brand{font-size:21px}}
