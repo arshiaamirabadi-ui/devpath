@@ -7,12 +7,14 @@ import {fa} from './logic';
 import {Meter} from './components';
 import {odysseyChapters,odysseySource} from './odyssey-story';
 
-const points=[{x:60,y:270},{x:205,y:155},{x:350,y:260},{x:495,y:145},{x:640,y:255},{x:780,y:145},{x:935,y:245}];
-const boundaries=[0,4,8,12,16,20,26];
+const points=[{x:90,y:245},{x:255,y:155},{x:420,y:255},{x:585,y:145},{x:750,y:250},{x:920,y:165}];
+export const voyageStops=points;
+// The route begins at Troy itself; the final approach ends at Ithaca.
+const boundaries=[0,4,8,12,16,26];
 const segment=(a:typeof points[number],b:typeof a)=>`C ${(a.x+b.x)/2} ${a.y} ${(a.x+b.x)/2} ${b.y} ${b.x} ${b.y}`;
 export function voyageGeometry(percent:number){
  const distance=Math.max(0,Math.min(100,percent))*26/100;
- let i=boundaries.findIndex((_,n)=>n<6&&distance<boundaries[n+1]);if(i<0)i=5;
+ let i=boundaries.findIndex((_,n)=>n<points.length-1&&distance<boundaries[n+1]);if(i<0)i=points.length-2;
  const t=Math.min(1,(distance-boundaries[i])/(boundaries[i+1]-boundaries[i]));
  const a=points[i],b=points[i+1],c={x:(a.x+b.x)/2,y:a.y},d={x:c.x,y:b.y};
  const lerp=(u:typeof a,v:typeof a)=>({x:u.x+(v.x-u.x)*t,y:u.y+(v.y-u.y)*t});
@@ -34,8 +36,7 @@ export default function Odyssey({report}:{report:ReturnType<typeof learningOverv
    <rect width="1000" height="390" rx="18" className="sea-fill"/><rect width="1000" height="390" fill="url(#sea-waves)"/>
    <text x="45" y="40" className="map-compass">N ↑</text><text x="860" y="355" className="sea-caption">DevPath Odyssey</text>
    <path d={geometry.path} className="voyage-path"/><path d={geometry.traveled} className="voyage-traveled"/>
-   <circle cx="60" cy="270" r="9" className="harbor-dot"/><text x="60" y="315" textAnchor="middle" className="island-caption">بندر آغاز</text>
-   {months.map((month,i)=>{const point=points[i+1],items=report.weeks.filter(w=>w.month===month.number),complete=items.every(w=>w.completion===100),active=report.currentMonth===month.number&&!report.finished;return <a key={month.id} href="#/progress" onClick={e=>{e.preventDefault();selectChapter(month.number)}} className={'odyssey-island '+(complete?'visited':active?'current':'')} aria-label={odysseyChapters[i].name+'، ماه '+fa(month.number)+'، '+month.title+(complete?'، طی‌شده':active?'، مرحله فعلی':'، پیش رو')}><title>{odysseyChapters[i].name} · {month.title} · {fa(Math.round(items.reduce((n,w)=>n+w.completion,0)/items.length))}٪ تکمیل</title><ellipse cx={point.x} cy={point.y+6} rx="43" ry="26" className="island-shadow"/><ellipse cx={point.x} cy={point.y} rx="37" ry="25" className="island-land"/><path d={`M ${point.x-13} ${point.y+5} l 13 -22 l 15 22 z`} className="island-mountain"/><text x={point.x} y={point.y-67} textAnchor="middle" className="island-month">ماه {fa(month.number)}</text><text x={i===5?900:point.x} y={point.y-45} textAnchor="middle" className="island-name">{odysseyChapters[i].name}</text><text x={point.x} y={point.y+55} textAnchor="middle" className="island-caption">{complete?'✓ طی‌شده':active?'ایستگاه فعلی':'پیش رو'}</text></a>})}
+   {months.map((month,i)=>{const point=points[i],items=report.weeks.filter(w=>w.month===month.number),complete=items.every(w=>w.completion===100),active=report.currentMonth===month.number&&!report.finished;return <a key={month.id} data-testid={'voyage-stop-'+month.number} data-x={point.x} data-y={point.y} href="#/progress" onClick={e=>{e.preventDefault();selectChapter(month.number)}} className={'odyssey-island '+(complete?'visited':active?'current':'')} aria-label={odysseyChapters[i].name+'، ماه '+fa(month.number)+'، '+month.title+(complete?'، طی‌شده':active?'، مرحله فعلی':'، پیش رو')}><rect x={point.x-75} y={point.y-115} width="150" height="190" fill="transparent" pointerEvents="all" aria-hidden="true"/><title>{odysseyChapters[i].name} · {month.title} · {fa(Math.round(items.reduce((n,w)=>n+w.completion,0)/items.length))}٪ تکمیل</title><ellipse cx={point.x} cy={point.y+6} rx="43" ry="26" className="island-shadow"/><ellipse cx={point.x} cy={point.y} rx="37" ry="25" className="island-land"/><path d={`M ${point.x-13} ${point.y+5} l 13 -22 l 15 22 z`} className="island-mountain"/><text x={point.x} y={point.y-102} textAnchor="middle" className="island-month">ماه {fa(month.number)}</text><text x={i===5?900:point.x} y={point.y-80} textAnchor="middle" className="island-name">{odysseyChapters[i].name}</text><text x={point.x} y={point.y+55} textAnchor="middle" className="island-caption">{complete?'✓ طی‌شده':active?'ایستگاه فعلی':'پیش رو'}</text></a>})}
    <g className="voyage-ship-position" style={{transform:`translate(${geometry.position.x}px,${geometry.position.y}px)`}} data-testid="voyage-ship" data-distance={report.voyage}><g className="voyage-ship"><ellipse cx="0" cy="20" rx="32" ry="7" fill="#080c222d"/><path d="M -28 6 L 29 6 L 17 21 L -17 21 Z" fill="#8c6de5" stroke="#e0cfff" strokeWidth="2"/><path d="M 0 4 V -50" stroke="#f1e5ff" strokeWidth="3"/><path d="M -4 -45 L -24 0 H -4 Z M 5 -41 L 24 0 H 5 Z" fill="url(#ship-sail)"/><path d="M 0 -50 L 17 -44 L 0 -39" fill="#72b5ff"/></g></g>
   </svg></div>
   <div className="odyssey-footer"><span><Navigation size={17}/>{fa(report.voyage)}٪ سفر پیوسته</span><span><Flag size={17}/>{fa(report.weeks.filter(w=>w.completion===100).length)} ایستگاه هفتگی تکمیل‌شده</span><Link className="outline" to={report.next?'activity/'+report.next.id:'review'}><Ship size={17}/>{report.next?'ادامه سفر از درس بعدی':'مرور سفر'}</Link></div>

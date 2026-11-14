@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test';
 
 test('six Odyssey episodes have a story and a learning parallel without changing progress on exploration',async({page},testInfo)=>{
  await page.goto('/#/progress');const chapter=page.getByRole('region',{name:'روایت مرحلهٔ سفر',exact:true});
+ const troy=page.getByTestId('voyage-stop-1');const x=await troy.getAttribute('data-x'),y=await troy.getAttribute('data-y');await expect(page.getByTestId('voyage-ship')).toHaveAttribute('style',`transform: translate(${x}px, ${y}px);`);await expect(page.getByText('بندر آغاز',{exact:true})).toHaveCount(0);
  for(const name of ['ترک تروا','غار پولیفموس','بادهای آئولوس','جزیرهٔ کیرکه','آواز سیرن‌ها','بازگشت به ایتاکا']){
   await page.getByRole('link',{name:new RegExp('^'+name+'، ماه')}).click();await expect(chapter.getByRole('heading',{name,exact:true})).toBeVisible();
   await expect(chapter.getByRole('heading',{name:'در ادیسه',exact:true})).toBeVisible();await expect(chapter.getByRole('heading',{name:'در مسیر تو',exact:true})).toBeVisible();await expect(chapter.locator('.chapter-quest').first()).toHaveAttribute('href',/#\/week\//);await expect(page.getByTestId('voyage-ship')).toHaveAttribute('data-distance','0');
