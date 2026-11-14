@@ -1,5 +1,25 @@
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
+
+test('Yekan Bakh loads; lesson navigation works; every section fits mobile in both themes',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/#/activity/w1-backend-study');
+ const fonts=await page.evaluate(async()=>{await Promise.all([400,600,700].map(w=>document.fonts.load(`${w} 16px "Yekan Bakh"`)));return Array.from(document.fonts).filter(f=>f.family.includes('Yekan Bakh')).map(f=>f.status)});
+ expect(fonts).toHaveLength(3);expect(fonts.every(s=>s==='loaded')).toBe(true);
+ await page.getByRole('button',{name:'تمرین درس',exact:true}).click();await expect(page.locator('.exercise-box')).toBeFocused();await expect(page).toHaveURL(/activity\/w1-backend-study$/);
+ for(const theme of ['light','dark']){
+  await page.evaluate(theme=>{const state=JSON.parse(localStorage.getItem('rahgo.personal.v1')!);state.settings.theme=theme;localStorage.setItem('rahgo.personal.v1',JSON.stringify(state))},theme);await page.reload();
+  for(const width of [320,1440]){
+   await page.setViewportSize({width,height:1000});
+   for(const route of ['','today','roadmap','week/1','activity/w1-backend-study','projects','project/task-api','resources','skills','review','notes','guide','settings','diagram']){
+    await page.goto('/#/'+route);await expect(page.locator('main')).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${theme} ${width} ${route}`).toBe(true);
+    if(['week/1','project/task-api','resources','settings'].includes(route))await page.screenshot({path:testInfo.outputPath(`${theme}-${width}-${route.replaceAll('/','-')}.png`)});
+   }
+  }
+ }
+ expect(errors).toEqual([]);
+});
 test('complete learning flow persists and restores exact personal data',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');await expect(page.getByRole('progressbar',{name:'پیشرفت مسیر',exact:true})).toHaveAttribute('value','0');

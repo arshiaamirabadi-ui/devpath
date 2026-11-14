@@ -5,6 +5,7 @@ import '@fontsource/vazirmatn/500.css';
 import '@fontsource/vazirmatn/600.css';
 import '@fontsource/vazirmatn/700.css';
 import './style.css';
+import './interface.css';
 import {StoreProvider} from './store';
 import App from './App';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><StoreProvider><App/></StoreProvider></React.StrictMode>);
