@@ -3,7 +3,8 @@ import {ArrowDown,ArrowLeft,Check,Focus,Minus,Plus,Search,X,MousePointer2,Move} 
 import {connections,nodes,type GraphNode} from './graph';
 import {projects,resources,type Track} from './content';
 import {useStore} from './store';
-import {fa,progress} from './logic';
+import {fa} from './logic';
+import {skillReport} from './learning';
 import {External,Link,Meter,Tag,allActivities,tracks} from './components';
 import {PageHeading} from './App';
 import {zoomAt,panBy,type Camera} from './map-camera';
@@ -26,7 +27,7 @@ export default function Diagram(){
  const matches=query.trim()?nodes.filter(n=>n.title.toLowerCase().includes(query.trim().toLowerCase())):[];
  const nodeProgress=(n:GraphNode)=>{
   if(n.kind==='project'){const p=projects.find(p=>p.id===n.sourceId)!;return Math.round((state.projects[p.id]?.checks.filter(c=>c<p.checklist.length).length??0)/p.checklist.length*100)}
-  return progress(activities.filter(a=>a.track===n.track&&n.weeks.includes(a.week)),state);
+  return skillReport(n.sourceId,state).score;
  };
  const reset=()=>{
   const top=tree.root,items=[...tree.nodes,...tree.groups];let fork=top.id;
@@ -96,7 +97,7 @@ export default function Diagram(){
     <p className="map-explanation">خط‌ها شاخه‌بندی پیشنهادی یادگیری را نشان می‌دهند. پیش‌نیازهای مشترک و ارتباط با شاخه‌های دیگر در پنل هر موضوع آمده‌اند. این ترتیب قفل اجباری ایجاد نمی‌کند.</p>
    </section>
    <aside className="map-detail graph-detail" aria-label="جزئیات موضوع انتخابی" aria-live="polite">
-    {chosen?<section className="panel"><div className="split"><Tag track={chosen.track}/><button aria-label="پاک‌کردن انتخاب" onClick={()=>setSelected('')}><X size={16}/></button></div><h2>{chosen.title}</h2><p className="muted">{chosen.kind==='project'?'پروژه با معیار پذیرش و راهنمای ساخت':'مهارت مرتبط با درس‌ها و تمرین‌های مسیر'}</p><Meter value={nodeProgress(chosen)} label={chosen.kind==='project'?'پیشرفت تحویل پروژه':'پیشرفت فعالیت‌های مرتبط'}/>{chosen.kind==='skill'&&<p className="muted">این درصد، فعالیت‌های انجام‌شده است؛ تسلط را با شاهد جدا ارزیابی کن.</p>}
+    {chosen?<section className="panel"><div className="split"><Tag track={chosen.track}/><button aria-label="پاک‌کردن انتخاب" onClick={()=>setSelected('')}><X size={16}/></button></div><h2>{chosen.title}</h2><p className="muted">{chosen.kind==='project'?'پروژه با معیار پذیرش و راهنمای ساخت':'مهارت مرتبط با درس‌ها و تمرین‌های مسیر'}</p><Meter value={nodeProgress(chosen)} label={chosen.kind==='project'?'پیشرفت تحویل پروژه':'شواهد یادگیری این مهارت'}/>{chosen.kind==='skill'&&<Link className="text-link" to={'skill/'+chosen.sourceId}>دیدن شواهد و درس‌های این مهارت ↗</Link>}{chosen.kind==='skill'&&<p className="muted">این امتیاز از تکمیل، مطالعه، تمرین و توضیح درس‌ها و خروجی پروژه‌های مرتبط به‌روز می‌شود؛ خودارزیابی شخصی جداست.</p>}
      <h3>پیش‌نیازهای مستقیم</h3>{relation.parents.length?<ul className="map-related">{linkButtons(relation.parents)}</ul>:<p className="muted">نقطه شروع این شاخه است.</p>}
      <h3>قدم‌های بعدی و کاربرد</h3>{relation.children.length?<ul className="map-related">{linkButtons(relation.children)}</ul>:<p className="muted">خروجی این بخش را در پروژه و پورتفولیو نشان بده.</p>}
      <h3>هفته‌های مرتبط</h3><div className="button-row">{chosen.weeks.map(n=><Link key={n} className="chip" to={'week/'+n}>هفته {fa(n)}</Link>)}</div><div className="graph-detail-actions"><Link className="primary full" to={chosen.kind==='project'?'project/'+chosen.sourceId:'week/'+chosen.weeks[0]}>{chosen.kind==='project'?'بازکردن راهنمای پروژه':'شروع درس‌های مرتبط'}<ArrowLeft size={15}/></Link>{chosen.kind==='skill'&&<Link className="outline full" to="skills">ثبت سطح و شاهد مهارت</Link>}</div>

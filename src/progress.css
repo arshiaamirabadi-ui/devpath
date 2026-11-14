@@ -1,0 +1,170 @@
+.progress-page { min-width: 0; }
+.progress-two-columns { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; align-items: start; }
+.chart-panel { border-top: 4px solid var(--tone); }
+.chart-panel>h2,.chart-panel>.split>h2 { display: flex; gap: 10px; align-items: center; color: var(--tone); font-size: 20px; margin: 0 0 16px; }
+.chart-panel>.split { flex-wrap: wrap; }
+.chart-panel>.split>h2 { margin: 0; }
+.odyssey { padding: 0; border-color: var(--edge-violet); overflow: hidden; box-shadow: inset 0 1px var(--edge-light),var(--depth-2); }
+.odyssey-heading { display: flex; justify-content: space-between; align-items: flex-start; padding: 24px 28px 8px; gap: 20px; }
+.odyssey-heading h2 { font-size: 25px; margin-bottom: 5px; }
+.odyssey-heading p { color: var(--muted); margin-bottom: 8px; }
+.odyssey-heading .eyebrow { display: flex; align-items: center; gap: 7px; color: var(--tone-violet); }
+.live-badge { display: inline-flex; gap: 7px; align-items: center; background: var(--wash-blue); border: 1px solid var(--edge-blue); color: var(--tone-blue); padding: 5px 10px; border-radius: 30px; font-size: 12px; white-space: nowrap; }
+.live-badge i { width: 6px; height: 6px; background: currentColor; border-radius: 50%; box-shadow: 0 0 0 4px var(--tint); }
+.odyssey-map-scroll { overflow-x: auto; margin: 10px 16px; border: 1px solid var(--edge-blue); border-radius: 16px; direction: ltr; scrollbar-width: thin; }
+.odyssey-map { display: block; width: 100%; min-width: 700px; height: auto; color: var(--tone-blue); font-family: var(--font-ui); }
+.sea-fill { fill: var(--wash-blue); }
+.sea-caption { fill: var(--tone-blue); opacity: .5; font-size: 15px; letter-spacing: 1px; }
+.map-compass { fill: var(--tone-blue); font-size: 19px; }
+.voyage-path { fill: none; stroke: var(--edge-blue); stroke-width: 4; stroke-dasharray: 5 10; stroke-linecap: round; }
+.voyage-traveled { fill: none; stroke: var(--tone-violet); stroke-width: 5; stroke-linecap: round; }
+.harbor-dot { fill: var(--tone-violet); stroke: var(--surface); stroke-width: 4; }
+.island-land { fill: var(--surface); stroke: var(--edge-blue); stroke-width: 2; }
+.island-shadow { fill: var(--edge-blue); opacity: .7; }
+.island-mountain { fill: var(--edge-violet); }
+.island-name { fill: var(--text); font-size: 17px; font-weight: 600; }
+.island-month { fill: var(--muted); font-size: 12px; }
+.odyssey-chapter { margin: 0 24px 24px; padding: 24px; background: var(--wash-violet); border: 1px solid var(--edge-violet); border-radius: 15px; scroll-margin-top: 20px; }
+.chapter-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.chapter-heading h3 { font-size: 26px; margin: 0; color: var(--tone-violet); }
+.chapter-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+.chapter-heading>button { margin-inline-start: auto; white-space: nowrap; }
+.chapter-emblem { display: inline-grid; place-items: center; width: 64px; height: 64px; flex-shrink: 0; border-radius: 18px; background: var(--surface); border: 1px solid var(--edge-violet); box-shadow: 0 4px 0 var(--edge-violet); color: var(--tone-violet); }
+.chapter-narrative { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.chapter-narrative h4 { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; color: var(--tone-violet); font-size: 15px; }
+.chapter-narrative p { font-size: 15px; line-height: 2; }
+.chapter-narrative>div { padding: 18px; background: var(--surface); border: 1px solid var(--edge-violet); border-radius: 10px; }
+.chapter-narrative a { font-size: 12px; color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+.chapter-keepsake { display: flex; align-items: center; gap: 12px; margin: 20px 0; font-size: 12px; color: var(--tone-violet); }
+.chapter-keepsake strong { display: block; font-size: 15px; }
+.chapter-quests { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+.chapter-quest { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--edge-violet); border-bottom-width: 3px; border-radius: 10px; padding: 14px; box-shadow: 0 4px 8px #0000000c; transition: transform .18s,box-shadow .18s; }
+.chapter-quest>span { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--tone-violet); }
+.chapter-quest>strong { font-size: 14px; flex: 1; }
+.chapter-quest .meter-label { font-size: 11px; }
+.chapter-quest:hover { transform: translateY(-4px); box-shadow: var(--depth-1); }
+.voyage-guide { margin: 0 24px 24px; padding: 12px 16px; border: 1px solid var(--line); background: var(--surface-raised); border-radius: 10px; color: var(--muted); font-size: 13px; }
+.voyage-guide>summary { cursor: pointer; color: var(--accent); }
+.voyage-guide p { font-size: 13px; margin-block: 12px 0; }
+.island-caption { fill: var(--muted); font-size: 13px; }
+.odyssey-island:hover .island-land,.odyssey-island:focus-visible .island-land { fill: var(--wash-violet); stroke: var(--tone-violet); stroke-width: 3; }
+.odyssey-island.current .island-land { fill: var(--wash-violet); stroke: var(--tone-violet); stroke-width: 3; }
+.odyssey-island.visited .island-land { fill: var(--wash-rose); stroke: var(--tone-rose); }
+.odyssey-island.visited .island-caption { fill: var(--tone-rose); }
+.odyssey-island { cursor: pointer; outline-offset: 8px; }
+.voyage-ship-position { transition: transform 1s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+.voyage-ship { animation: ship-bob 4s ease-in-out infinite; filter: drop-shadow(0 6px 4px #070f3930); }
+@keyframes ship-bob { 0%,100% { transform: translateY(-8px) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+.odyssey-footer { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 16px 24px; border-top: 1px solid var(--line); }
+.odyssey-footer>span { display: flex; gap: 7px; align-items: center; color: var(--tone-violet); font-size: 14px; }
+.odyssey-footer>.outline { margin-inline-start: auto; }
+.voyage-rule { font-size: 13px!important; color: var(--muted); margin: 0; padding: 0 24px 22px; }
+.odyssey-vitals { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; padding: 0 24px 20px; }
+.odyssey-vitals>a { display: flex; align-items: center; gap: 10px; background: var(--wash); border: 1px solid var(--tone-edge); border-bottom-width: 3px; border-radius: 10px; padding: 14px 12px; color: var(--tone); transition: transform .18s,box-shadow .18s; }
+.odyssey-vitals>a:hover { transform: translateY(-3px); box-shadow: var(--depth-1); }
+.odyssey-vitals span { font-size: 12px; }
+.odyssey-vitals strong { display: block; color: var(--text); font-size: 14px; }
+.donut-layout { display: flex; align-items: center; gap: 16px; }
+.completion-donut { width: 56%; max-width: 240px; flex-shrink: 0; }
+.completion-donut circle { fill: none; stroke-width: 15; }
+.donut-track { stroke: var(--wash-blue); }
+.donut-value { stroke: var(--tone-blue); stroke-linecap: round; transition: stroke-dashoffset .6s; }
+.donut-number { fill: var(--text); font-weight: 700; font-size: 32px; dominant-baseline: middle; }
+.donut-caption { fill: var(--muted); font-size: 12px; }
+.donut-legend { font-size: 14px; }
+.donut-legend p { margin-bottom: 10px; font-size: 14px; }
+.donut-legend strong { color: var(--tone-blue); }
+.track-radar { display: block; width: 100%; max-width: 280px; margin: -10px auto; }
+.track-radar text { fill: var(--muted); font-size: 12px; }
+.radar-grid { fill: none; stroke: var(--line); stroke-width: 1; }
+.radar-fill { fill: var(--instruction-bg); stroke: var(--tone-violet); stroke-width: 2; }
+.radar-dot { fill: var(--tone-violet); }
+.radar-legend { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px 16px; font-size: 12px; }
+.radar-legend>span { display: flex; align-items: center; gap: 7px; color: var(--body); }
+.radar-legend i { width: 7px; height: 7px; background: var(--tone); border-radius: 50%; }
+.radar-legend strong { margin-inline-start: auto; color: var(--tone); }
+.chart-tabs { display: inline-flex; background: var(--surface-input); border: 1px solid var(--line); border-radius: 10px; padding: 4px; gap: 5px; }
+.chart-tabs button { min-height: 36px; font-size: 13px; border-bottom-width: 1px; box-shadow: none; }
+.chart-tabs button[aria-pressed=true] { background: var(--wash-violet); border-color: var(--tone-violet); color: var(--tone-violet); }
+.study-chart { display: block; width: 100%; max-height: 300px; overflow: visible; direction: ltr; }
+.study-chart text { fill: var(--muted); font-size: 11px; }
+.chart-grid { stroke: var(--line); stroke-dasharray: 3 5; }
+.study-area { fill: var(--wash-violet); }
+.study-line { fill: none; stroke: var(--tone-violet); stroke-width: 2.5; }
+.study-dot { fill: var(--tone-violet); stroke: var(--surface); stroke-width: 1.5; }
+.chart-data { border: 1px solid var(--line); background: var(--surface-raised); padding: 10px 14px; border-radius: 10px; font-size: 13px; }
+.chart-data>summary { cursor: pointer; color: var(--accent); }
+.chart-data .table-scroll { max-height: 300px; overflow: auto; }
+.study-heatmap { display: grid; grid-template-columns: repeat(30,minmax(0,1fr)); gap: 5px; margin-block: 22px 8px; direction: ltr; }
+.study-heatmap>span { aspect-ratio: 1; border: 1px solid var(--line); background: var(--surface-raised); border-radius: 5px; }
+.study-heatmap>span[data-level='1'] { background: var(--edge-violet); }
+.study-heatmap>span[data-level='2'] { background: #9572cf; }
+.study-heatmap>span[data-level='3'] { background: #c09cf5; }
+.weekly-chart { display: flex; align-items: flex-end; gap: 8px; padding: 16px 0 8px; overflow-x: auto; scrollbar-width: thin; direction: ltr; }
+.weekly-bar { display: flex; flex: 1 0 23px; flex-direction: column; gap: 8px; font-size: 12px; text-align: center; color: var(--muted); padding: 4px 2px; border-radius: 5px; transition: background .15s,transform .15s; }
+.weekly-bar:hover { background: var(--wash-blue); transform: translateY(-3px); }
+.weekly-bar.current { background: var(--wash-violet); outline: 1px solid var(--edge-violet); color: var(--tone-violet); }
+.bar-track { position: relative; height: 140px; display: block; background: var(--surface-raised); border-radius: 5px; border: 1px solid var(--line); min-width: 16px; }
+.bar-track>i { position: absolute; bottom: 0; width: 42%; border-radius: 3px 3px 0 0; transition: height .5s; }
+.week-completed { left: 5%; background: var(--tone-blue); }
+.week-learning { right: 5%; background: var(--tone-violet); }
+.chart-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.chart-legend>span { display: flex; align-items: center; gap: 7px; }
+.chart-legend i { width: 10px; height: 10px; border-radius: 3px; }
+.legend-complete { background: var(--tone-blue); }
+.legend-learning { background: var(--tone-violet); }
+.chart-legend small { margin-inline-start: auto; }
+.progress-skill { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--tone-edge); border-radius: 10px; background: var(--wash); margin-block: 10px; transition: transform .18s,box-shadow .18s; }
+.progress-skill>div { flex: 1; }
+.progress-skill strong { display: block; font-size: 14px; }
+.progress-skill span { display: block; font-size: 12px; color: var(--tone); }
+.progress-skill>b { font-size: 15px; color: var(--tone); white-space: nowrap; }
+.progress-skill:hover { transform: translateY(-3px); box-shadow: var(--depth-1); }
+.voyage-track-list { margin-block: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
+.voyage-track-list>div { padding: 6px 0; }
+.voyage-track-list progress::-webkit-progress-value { background: var(--tone); }
+.progress-page .empty svg { color: var(--instruction); }
+@media(max-width:1100px) { .donut-layout { flex-direction: column; } .donut-legend { display: flex; gap: 14px; flex-wrap: wrap; } .completion-donut { width: 70%; } }
+@media(max-width:760px) {
+ .odyssey-chapter { margin-inline: 16px; padding: 18px; }
+ .chapter-heading { flex-wrap: wrap; gap: 12px; }
+ .chapter-emblem { width: 48px; height: 48px; border-radius: 13px; }
+ .chapter-heading h3 { font-size: 23px; }
+ .chapter-narrative { grid-template-columns: 1fr; gap: 16px; }
+ .chapter-quests { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .voyage-guide { margin-inline: 16px; }
+ .odyssey-vitals { grid-template-columns: repeat(2,minmax(0,1fr)); padding-inline: 16px; }
+ .progress-two-columns { grid-template-columns: 1fr; gap: 0; }
+ .odyssey-heading { flex-wrap: wrap; padding: 20px 18px 8px; gap: 10px; }
+ .odyssey-heading h2 { font-size: 22px; }
+ .odyssey-map-scroll { margin: 10px; }
+ .odyssey-footer { padding: 16px; gap: 12px; }
+ .voyage-rule { padding-inline: 16px; }
+ .donut-layout { flex-direction: row; }
+ .completion-donut { width: 50%; }
+ .donut-legend { display: block; }
+ .study-heatmap { grid-template-columns: repeat(15,minmax(0,1fr)); }
+}
+@media(max-width:420px) {
+ .chapter-quests { grid-template-columns: 1fr; }
+ .chapter-narrative>div { padding: 14px; }
+ .odyssey-vitals { grid-template-columns: 1fr; }
+ .odyssey-heading h2 { font-size: 20px; }
+ .odyssey-heading p { font-size: 13px; }
+ .odyssey-footer>span { font-size: 12px; }
+ .odyssey-footer>.outline { width: 100%; }
+ .chart-panel>h2,.chart-panel>.split>h2 { font-size: 18px; }
+ .donut-layout { flex-direction: column; }
+ .completion-donut { width: 75%; }
+ .donut-legend { display: flex; font-size: 13px; }
+ .radar-legend { grid-template-columns: 1fr; }
+ .study-chart text { font-size: 13px; }
+ .chart-panel>.split { gap: 16px; }
+ .chart-tabs { width: 100%; }
+ .chart-tabs button { flex: 1; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .voyage-ship-position,.donut-value,.bar-track>i { transition: none; }
+ .voyage-ship { animation: none; }
+ .weekly-bar:hover,.progress-skill:hover,.odyssey-vitals>a:hover,.chapter-quest:hover { transform: none; }
+}

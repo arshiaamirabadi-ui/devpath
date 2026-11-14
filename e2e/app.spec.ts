@@ -22,10 +22,10 @@ test('Yekan Bakh loads; lesson navigation works; every section fits mobile in bo
   await page.evaluate(theme=>{const state=JSON.parse(localStorage.getItem('rahgo.personal.v1')!);state.settings.theme=theme;localStorage.setItem('rahgo.personal.v1',JSON.stringify(state))},theme);await page.reload();
   for(const width of [320,1440]){
    await page.setViewportSize({width,height:1000});
-   for(const route of ['','today','roadmap','week/1','activity/w1-backend-study','projects','project/task-api','resources','skills','review','notes','guide','settings','diagram']){
+   for(const route of ['','progress','skill/sql','today','roadmap','week/1','activity/w1-backend-study','projects','project/task-api','resources','skills','review','notes','guide','settings','diagram']){
     await page.goto('/#/'+route);await expect(page.locator('main')).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${theme} ${width} ${route}`).toBe(true);
-    if(['week/1','project/task-api','resources','settings'].includes(route))await page.screenshot({path:testInfo.outputPath(`${theme}-${width}-${route.replaceAll('/','-')}.png`)});
+    if(['today','roadmap','skills','progress','week/1','project/task-api','resources','settings'].includes(route))await page.screenshot({path:testInfo.outputPath(`${theme}-${width}-${route.replaceAll('/','-')}.png`)});
    }
   }
  }
@@ -70,7 +70,7 @@ test('responsive RTL layouts and mobile navigation',async({page},testInfo)=>{
 });
 test('lessons include real explanations, assigned readings and practice; project checks show how to build and verify',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/#/week/1');const first=page.locator('.activity-row').first();await first.getByText('راهنمای درس: توضیح، منبع و مراحل انجام',{exact:true}).click();
+ await page.goto('/#/week/1');const first=page.locator('.activity-row').first();await first.getByText('راهنمای درس',{exact:true}).click();
  await expect(first.getByRole('heading',{name:'این درس چه چیزی یاد می‌دهد؟',exact:true})).toBeVisible();await expect(first.getByRole('heading',{name:'از کدام منبع و کدام بخش بخوانم؟',exact:true})).toBeVisible();await expect(first.locator('.lesson-code code')).toContainText('package main');await expect(page.getByRole('progressbar',{name:'پیشرفت مسیر',exact:true})).toHaveAttribute('value','0');
  await first.getByRole('link',{name:'رفتن به میز مطالعه و ثبت خروجی',exact:true}).click();await expect(page).toHaveURL(/activity\/w1-backend-study/);await expect(page.locator('.lesson-source').first()).toHaveAttribute('href','https://go.dev/tour/basics/1');await expect(page.locator('.lesson-steps li')).toHaveCount(3);await expect(page.getByRole('combobox',{name:'وضعیت فعالیت',exact:true})).toHaveValue('todo');
  await page.screenshot({path:testInfo.outputPath('lesson-desktop.png'),fullPage:false});

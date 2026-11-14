@@ -2,6 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {freshState,progress,buildSchedule,parseBackup,totalMinutes,recordSession,todayISO} from './logic';
 const activities=[{id:'a',minutes:60},{id:'b',minutes:180},{id:'c',minutes:90,optional:true}];
 describe('weighted progress',()=>{
+ it('never shows 100 percent while a required activity remains unfinished',()=>{const s=freshState();s.activities.a={status:'done',read:false,practiced:false,explained:false,output:''};expect(progress([{id:'a',minutes:999},{id:'b',minutes:1}],s)).toBe(99.9)});
  it('starts at zero; weights minutes; excludes optional; allows undo',()=>{const s=freshState();expect(progress(activities,s)).toBe(0);s.activities.a={status:'done',read:true,practiced:false,explained:false,output:''};expect(progress(activities,s)).toBe(25);s.activities.c={...s.activities.a};expect(progress(activities,s)).toBe(25);s.activities.a.status='todo';expect(progress(activities,s)).toBe(0)});
  it('counts a shared activity once',()=>{const s=freshState();s.activities.a={status:'done',read:true,practiced:true,explained:true,output:''};expect(progress([activities[0],activities[0],activities[1]],s)).toBe(25)});
 });
