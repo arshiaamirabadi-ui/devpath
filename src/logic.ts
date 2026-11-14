@@ -26,7 +26,7 @@ export type PersonalState=z.infer<typeof stateSchema>;
 export type ActivityState=z.infer<typeof activityState>;
 export type Session=z.infer<typeof sessionSchema>;
 export const blankActivity:ActivityState={status:'todo',read:false,practiced:false,explained:false,output:''};
-export function freshState():PersonalState{return {version:1,settings:{startDate:todayISO(),weeklyHours:15,days:[6,0,1,2,3],theme:'light'},activities:{},sessions:[],notes:[],reviews:{},resources:{},skills:{},projects:{},planned:{},lastActivity:''}}
+export function freshState():PersonalState{return {version:1,settings:{startDate:todayISO(),weeklyHours:15,days:[6,0,1,2,3],theme:'dark'},activities:{},sessions:[],notes:[],reviews:{},resources:{},skills:{},projects:{},planned:{},lastActivity:''}}
 export function parseBackup(raw:string):PersonalState {if(raw.length>5_000_000)throw new Error('فایل باید کمتر از ۵ مگابایت باشد');const result=stateSchema.safeParse(JSON.parse(raw));if(!result.success)throw new Error('ساختار فایل یا مقادیر آن معتبر نیست. از خروجی نسخه ۱ راه‌گو استفاده کنید.');return result.data}
 export function progress(activities:{id:string;minutes:number;optional?:boolean}[],state:PersonalState):number {const unique=[...new Map(activities.filter(a=>!a.optional).map(a=>[a.id,a])).values()];const all=unique.reduce((s,a)=>s+a.minutes,0);return all?Math.round(unique.reduce((s,a)=>s+(state.activities[a.id]?.status==='done'?a.minutes:0),0)/all*100):0}
 export function recordSession(state:PersonalState,session:Session):PersonalState {sessionSchema.parse(session);return {...state,sessions:[...state.sessions.filter(s=>s.id!==session.id),session]}}
