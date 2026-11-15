@@ -65,3 +65,41 @@
  .today-date-summary>.split>label { min-width:0; width:100%; }
  .today-full-date { max-width:100%; align-self:flex-start; }
 }
+/* Planning is one readable surface, with a separate date toolbar. */
+.plan-controls { flex:0 0 180px; min-width:0; display:flex; flex-direction:column; gap:10px; }
+.plan-controls>label { padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin:0; font-size:12px; }
+.plan-controls>label>svg { color:var(--muted); }.plan-controls>button { font-size:12px; }
+.plan-row>.activity-row { order:-1; }
+@media(max-width:760px) {
+ main[data-page=today]>.reschedule-panel { padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
+ .reschedule-panel>h2 { margin:28px 0 14px; font-size:20px; }
+ .reschedule-panel>.filters { display:grid; grid-template-columns:1fr 1fr; gap:12px; background:transparent; box-shadow:none; padding:0; border:0; margin-bottom:20px; }
+ .reschedule-panel>.filters label { min-width:0; font-size:12px; margin:0; }.reschedule-panel>.filters select { min-height:42px; font-size:12px; background:var(--surface); border-radius:12px; }
+ .reschedule-panel .plan-row { display:grid; grid-template-columns:minmax(0,1fr); gap:0; padding:0; margin:20px 0; border:1px solid var(--line); border-top:3px solid var(--tone); background:var(--surface); border-radius:20px; box-shadow:none; }
+ .reschedule-panel .plan-controls { display:flex; flex-direction:row; align-items:center; flex-wrap:wrap; gap:8px; padding:12px 14px; grid-row:1; border-bottom:1px solid var(--line); background:transparent; }
+ .reschedule-panel .plan-controls>label { display:flex; flex-direction:row; align-items:center; gap:8px; min-width:0; flex:1 1 100%; padding:0; border:0; border-radius:0; background:transparent; font-size:11px; margin:0; }
+ .reschedule-panel .plan-controls>label>span { white-space:nowrap; }.reschedule-panel .plan-controls input { min-width:0; flex:1; width:auto; min-height:38px; border-radius:12px; padding:6px 8px; font-size:12px; background:var(--surface-raised); }
+ .reschedule-panel .plan-controls>button { min-height:32px; padding:4px 10px; border:1px solid var(--line); border-radius:16px; background:transparent; box-shadow:none; font-size:11px; }
+ .reschedule-panel .plan-controls>button:not(:disabled):hover { transform:none; background:var(--wash); box-shadow:none; }
+ .reschedule-panel .plan-row>.activity-row { display:grid; grid-template-columns:28px minmax(0,1fr) 30px; gap:12px 8px; grid-row:2; order:0; width:100%; min-width:0; margin:0; padding:18px 14px; border:0; background:transparent; border-radius:0!important; box-shadow:none; }
+ .reschedule-panel .plan-row .activity-summary { display:contents; }
+ .reschedule-panel .plan-row .check-circle { grid-column:1; grid-row:1; align-self:center; width:26px; height:26px; min-height:26px; padding:3px; box-shadow:none; }
+ .reschedule-panel .plan-row .activity-kind { grid-column:2; grid-row:1; display:flex; align-items:center; flex-wrap:wrap; gap:4px 10px; font-size:10px; padding:0; min-width:0; }
+ .reschedule-panel .plan-row .activity-summary>a { grid-column:1/-1; grid-row:2; font-size:16px; line-height:1.9; font-weight:600; color:var(--text); text-decoration:none; }
+ .reschedule-panel .plan-row .activity-description { grid-column:1/-1; grid-row:3; margin:0; font-size:13px!important; line-height:2; color:var(--body); }
+ .reschedule-panel .plan-row .row-meta { grid-column:1/-1; grid-row:4; display:flex; flex-wrap:wrap; gap:8px 12px; margin:0; font-size:11px; }
+ .reschedule-panel .plan-row .row-meta>span { font-size:10px; }.reschedule-panel .plan-row .tag { font-size:10px; padding:3px 7px; background:var(--wash); color:var(--tone); border:0; }
+ .reschedule-panel .plan-row .icon-link { grid-column:3; grid-row:1; width:30px; height:30px; padding:5px; border:0; border-radius:50%; background:var(--surface-raised); box-shadow:none; }
+ .reschedule-panel .plan-row .activity-lesson-preview { grid-column:1/-1; grid-row:5; min-width:0; width:100%; margin:4px 0 0; padding:0; border:0; background:transparent; border-radius:0; }
+ .reschedule-panel .plan-row .activity-lesson-preview>summary { padding:12px; min-height:48px; font-size:13px; border:1px solid var(--line); border-radius:12px; background:var(--surface-raised); }
+ .reschedule-panel .plan-row .activity-lesson-preview[open]>summary { border-color:var(--tone-edge); background:var(--wash); }
+ .reschedule-panel .plan-row .activity-lesson-preview>.lesson-content { width:100%; min-width:0; padding:0; margin:8px 0 0; }
+ .reschedule-panel .plan-row .lesson-embedded .lesson-section { min-width:0; width:100%; padding:20px 0; margin:0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; box-shadow:none; }
+ .reschedule-panel .plan-row .lesson-heading { gap:10px; padding-bottom:12px; font-size:17px; line-height:1.9; align-items:flex-start; }
+ .reschedule-panel .plan-row .section-icon { width:28px; height:28px; border:0; border-radius:50%; box-shadow:none; }.reschedule-panel .plan-row .section-icon svg { width:17px; height:17px; }
+ .reschedule-panel .plan-row .lesson-content p,.reschedule-panel .plan-row .lesson-content li { font-size:14px; line-height:2.05; overflow-wrap:anywhere; }
+ .reschedule-panel .plan-row .lesson-readings { padding-inline:0; }.reschedule-panel .plan-row .lesson-readings>li,.reschedule-panel .plan-row .lesson-steps li { padding:14px 12px; border-radius:12px; box-shadow:none; }
+ .reschedule-panel .plan-row .lesson-steps { padding-inline:0; }.reschedule-panel .plan-row .exercise-box dd { margin-inline:0; padding:12px; border-radius:10px; }
+ .reschedule-panel .plan-row .lesson-code-block { min-width:0; max-width:100%; border-radius:12px; }.reschedule-panel .plan-row .lesson-code-block pre { max-width:100%; overflow:auto; font-size:12px; }
+ .reschedule-panel .plan-row .activity-lesson-preview>.primary { display:flex; width:100%; max-width:100%; margin:18px 0 0; white-space:normal; font-size:13px; padding:12px; }
+}

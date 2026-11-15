@@ -1,6 +1,6 @@
 import { tx, dateLocale } from "./locale";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowUpLeft, Bookmark, Check, Download, ExternalLink, FolderKanban, Search, Upload } from "lucide-react";
+import { ArrowLeft, ArrowUpLeft, Bookmark, Check, Download, ExternalLink, FolderKanban, Search, Upload, CalendarDays, RotateCcw } from "lucide-react";
 import { guidance, months, projects, resources, skills, tools, weeks, type Track } from "./content";
 import { ActivityRow, Empty, External, Link, Meter, Notes, Sessions, Tag, allActivities, tracks } from "./components";
 import { PageHeading } from "./App";
@@ -129,7 +129,7 @@ export function TodayPage() {
               weekday: "short"
             }).format(new Date(d + "T12:00Z")))}</span><strong>{tx(new Intl.DateTimeFormat(dateLocale(), {
               day: "numeric"
-            }).format(new Date(d + "T12:00Z")))}</strong><small>{tx(fa(totalMinutes(state, d, d)))}{tx(" دقیقه")}</small></button>))}</div><h2>{tx("فعالیت‌های ")}{tx(displayDate(selected))}</h2>{tx(due.length ? <DailyAgenda start={dayStart} focus={due.find(a=>state.activities[a.id]?.status!=="done")} items={due.map(a=>({activity:a,minutes:state.planned[a.id]?a.minutes:schedule.portions[selected]?.find(p=>p.id===a.id)?.minutes??a.minutes}))}/> : <Empty>{tx("فعالیتی برای این روز نیست. از فهرست پایین برنامه‌ریزی کن.")}</Empty>)}<p className="muted">{tx("فعالیت طولانی ممکن است در چند روز سهم زمانی داشته باشد. جابه‌جایی دستی، تمام فعالیت را به تاریخ انتخابی می‌برد.")}</p></section><section className="panel"><h2>{tx("تقسیم و جابه‌جایی فعالیت‌ها")}</h2><div className="filters"><label>{tx("هفته")}<select aria-label={tx("هفته")} value={week} onChange={e => setWeek(Number(e.target.value))}>{tx(weeks.map(w => <option key={w.id} value={w.number}>{tx("هفته ")}{tx(fa(w.number))} · {tx(w.title)}</option>))}</select></label><label>{tx("مسیر")}<select aria-label={tx("مسیر")} value={track} onChange={e => setTrack(e.target.value)}><option value="all">{tx("همه مسیرها")}</option>{tx(Object.entries(tracks).map(([k, v]) => <option key={k} value={k}>{tx(v)}</option>))}</select></label></div>{tx(activities.filter(a => a.week === week && (track === "all" || a.track === track)).map(a => <div className="plan-row" key={a.id}><ActivityRow a={a} /><label>{tx("روز فعالیت")}<input type="date" value={state.planned[a.id] ?? schedule.dates[a.id] ?? selected} onChange={e => e.target.value && update(s => ({
+            }).format(new Date(d + "T12:00Z")))}</strong><small>{tx(fa(totalMinutes(state, d, d)))}{tx(" دقیقه")}</small></button>))}</div><h2>{tx("فعالیت‌های ")}{tx(displayDate(selected))}</h2>{tx(due.length ? <DailyAgenda start={dayStart} focus={due.find(a=>state.activities[a.id]?.status!=="done")} items={due.map(a=>({activity:a,minutes:state.planned[a.id]?a.minutes:schedule.portions[selected]?.find(p=>p.id===a.id)?.minutes??a.minutes}))}/> : <Empty>{tx("فعالیتی برای این روز نیست. از فهرست پایین برنامه‌ریزی کن.")}</Empty>)}<p className="muted">{tx("فعالیت طولانی ممکن است در چند روز سهم زمانی داشته باشد. جابه‌جایی دستی، تمام فعالیت را به تاریخ انتخابی می‌برد.")}</p></section><section className="panel reschedule-panel"><h2>{tx("تقسیم و جابه‌جایی فعالیت‌ها")}</h2><div className="filters"><label>{tx("هفته")}<select aria-label={tx("هفته")} value={week} onChange={e => setWeek(Number(e.target.value))}>{tx(weeks.map(w => <option key={w.id} value={w.number}>{tx("هفته ")}{tx(fa(w.number))} · {tx(w.title)}</option>))}</select></label><label>{tx("مسیر")}<select aria-label={tx("مسیر")} value={track} onChange={e => setTrack(e.target.value)}><option value="all">{tx("همه مسیرها")}</option>{tx(Object.entries(tracks).map(([k, v]) => <option key={k} value={k}>{tx(v)}</option>))}</select></label></div>{tx(activities.filter(a => a.week === week && (track === "all" || a.track === track)).map(a => <div className="plan-row" data-tone={trackTones[a.track]} key={a.id}><div className="plan-controls"><label><CalendarDays size={16} aria-hidden="true"/><span>{tx("روز فعالیت")}</span><input type="date" value={state.planned[a.id] ?? schedule.dates[a.id] ?? selected} onChange={e => e.target.value && update(s => ({
             ...s,
             planned: {
               ...s.planned,
@@ -144,7 +144,7 @@ export function TodayPage() {
             ...s,
             planned
           };
-        })}>{tx("برنامهٔ پیشنهادی")}</button>)}</div>))}</section><Sessions /></>;
+        })}><RotateCcw size={15} aria-hidden="true"/>{tx("برنامهٔ پیشنهادی")}</button>)}</div><ActivityRow a={a} /></div>))}</section><Sessions /></>;
 }
 const emptyProject = {
   checks: [] as number[],
