@@ -608,5 +608,7 @@
   "Changes from another tab received.",
   "The other tab's data is invalid.",
   "Not saved: browser storage is unavailable or full. Export your current data.",
-  "The browser's current data is invalid. Export or restore a backup first."
+  "The browser's current data is invalid. Export or restore a backup first.",
+  "Collapse menu",
+  "Expand sidebar"
 ]

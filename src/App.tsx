@@ -1,9 +1,10 @@
 import { tx, dateLocale } from "./locale";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState, useRef } from "react";
 import { ChartNoAxesCombined, Ship, ArrowLeft, ArrowUpLeft, BookOpen, CalendarDays, Check, ChevronLeft, ClipboardCheck, Code2, Compass, Flag, FolderKanban, GraduationCap, LayoutDashboard, Menu, Moon, NotebookPen, Settings, Sun, Target, X } from "lucide-react";
 import { months, weeks, resources, projects, skills } from "./content";
 import { useStore } from "./store";
 import { useLanguage } from "./LanguageProvider";
+import Sidebar from "./Sidebar";
 import { addDays, buildSchedule, displayDate, fa, progress, saturday, todayISO, totalMinutes } from "./logic";
 import { ActivityRow, Empty, Link, Meter, Notes, Tag, allActivities, tracks } from "./components";
 import { StatCard } from "./ui";
@@ -47,6 +48,13 @@ export default function App() {
   } = useLanguage();
   const [route, setRoute] = useState(location.hash.replace(/^#\/?/, ""));
   const [open, setOpen] = useState(false);
+  const [collapsed,setCollapsed]=useState(()=>{try{return localStorage.getItem('devpath.sidebar.collapsed')==='1'}catch{return false}});
+  const [mobile,setMobile]=useState(()=>window.matchMedia('(max-width:760px)').matches);
+  const menuRef=useRef<HTMLButtonElement>(null);
+  useEffect(()=>{const media=window.matchMedia('(max-width:760px)');const resize=()=>{setMobile(media.matches);setOpen(false)};media.addEventListener('change',resize);return()=>media.removeEventListener('change',resize)},[]);
+  const closeMenu=()=>{setOpen(false);requestAnimationFrame(()=>menuRef.current?.focus())};
+  const toggleMenu=()=>{if(mobile){setOpen(value=>!value);return}setCollapsed(value=>{const next=!value;try{localStorage.setItem('devpath.sidebar.collapsed',next?'1':'0')}catch{}return next})};
+  const menuLabel=mobile?tx('بازکردن منو'):collapsed?tx('بازکردن منوی کناری'):tx('جمع‌کردن منو');
   const {
     state,
     update,
@@ -67,11 +75,11 @@ export default function App() {
   const activities = allActivities(),
     pct = progress(activities, state);
   const title = nav.find(n => n[0] === route)?.[1] ?? (route.startsWith("week/") ? "برنامه هفتگی" : route.startsWith("activity/") ? "میز مطالعه" : route.startsWith("skill/") ? "مهارت و شواهد" : "جزئیات پروژه");
-  return <div className="app-shell"><a className="skip" href="#main" onClick={e => {
+  return <div className={"app-shell "+(!mobile&&collapsed?"is-sidebar-collapsed":"")}><a className="skip" href="#main" onClick={e => {
       e.preventDefault();
       document.getElementById("main")?.focus();
-    }}>{tx("رفتن به محتوا")}</a><aside className={"sidebar " + (open ? "is-open" : "")}><Link to="" className="brand"><span className="brand-symbol"><Code2 size={25} /></span><span>DevPath<small>{tx("هر روز، یک قدم جلوتر")}</small></span></Link><button className="mobile-close" aria-label={tx("بستن منو")} onClick={() => setOpen(false)}><X /></button><div className="workspace-label">{tx("فضای یادگیری من")}</div><nav aria-label={tx("ناوبری اصلی")}>{tx(nav.map(([path, label, Icon]) => <Link key={path} to={path} className={(route === path || path === "roadmap" && route.startsWith("week/") || path === "skills" && route.startsWith("skill/") ? "active " : "") + "nav-link"}><Icon size={19} /><span>{tx(label)}</span>{tx(path === "roadmap" && <small>{tx("۲۶")}</small>)}</Link>))}</nav><div className="sidebar-bottom"><div className="mini-path"><span className="eyebrow">{tx("هدف این مسیر")}</span><strong>Junior Backend Developer</strong><span>Go · PostgreSQL · REST · Docker</span><Meter value={pct} label="پیشرفت مسیر" /></div><div className="profile"><span className="avatar">{tx("م")}</span><span>{tx("مسیر شخصی من")}<small>{tx("ذخیره روی همین دستگاه")}</small></span><span className="live-dot" title={tx("ذخیره محلی")} /></div></div></aside>{tx(open && <button className="scrim" aria-label={tx("بستن منو")} onClick={() => setOpen(false)} />)}
- <div className="main-shell"><header className="topbar"><div className="breadcrumb"><button className="mobile-menu" aria-label={tx("بازکردن منو")} onClick={() => setOpen(true)}><Menu /></button><span>{tx("فضای یادگیری")}</span><ChevronLeft size={14} /><strong>{tx(title)}</strong></div><div className="top-actions"><span className="date-today">{tx(new Intl.DateTimeFormat(dateLocale(), {
+    }}>{tx("رفتن به محتوا")}</a><Sidebar items={nav} route={route} open={open} collapsed={!mobile&&collapsed} mobile={mobile} progress={pct} onClose={closeMenu} onNavigate={()=>{setOpen(false);requestAnimationFrame(()=>document.getElementById('main')?.focus())}}/>{tx(open && <button className="scrim" aria-label={tx("بستن منو")} onClick={closeMenu} />)}
+ <div className="main-shell" inert={mobile&&open}><header className="topbar"><div className="breadcrumb"><button ref={menuRef} className="sidebar-toggle" aria-label={menuLabel} title={menuLabel} aria-controls="learning-sidebar" aria-expanded={mobile?open:!collapsed} onClick={toggleMenu}><Menu size={21}/></button><span>{tx("فضای یادگیری")}</span><ChevronLeft size={14} /><strong>{tx(title)}</strong></div><div className="top-actions"><span className="date-today">{tx(new Intl.DateTimeFormat(dateLocale(), {
               timeZone: "Asia/Tehran",
               weekday: "long",
               day: "numeric",
