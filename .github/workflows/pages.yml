@@ -1,4 +1,4 @@
-name: Verify and deploy Rahgo
+name: Verify and deploy DevPath
 
 on:
   push:

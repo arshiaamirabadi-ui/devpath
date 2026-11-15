@@ -79,7 +79,7 @@ export default function App() {
       e.preventDefault();
       document.getElementById("main")?.focus();
     }}>{tx("رفتن به محتوا")}</a><Sidebar items={nav} route={route} open={open} collapsed={!mobile&&collapsed} mobile={mobile} progress={pct} onClose={closeMenu} onNavigate={()=>{setOpen(false);requestAnimationFrame(()=>document.getElementById('main')?.focus())}}/>{tx(open && <button className="scrim" aria-label={tx("بستن منو")} onClick={closeMenu} />)}
- <div className="main-shell" inert={mobile&&open}><header className="topbar"><div className="breadcrumb"><button ref={menuRef} className="sidebar-toggle" aria-label={menuLabel} title={menuLabel} aria-controls="learning-sidebar" aria-expanded={mobile?open:!collapsed} onClick={toggleMenu}><Menu size={21}/></button><span>{tx("فضای یادگیری")}</span><ChevronLeft size={14} /><strong>{tx(title)}</strong></div><div className="top-actions"><span className="date-today">{tx(new Intl.DateTimeFormat(dateLocale(), {
+ <div className="main-shell" inert={mobile&&open}><header className="topbar"><div className="breadcrumb"><button ref={menuRef} className="sidebar-toggle" aria-label={menuLabel} title={menuLabel} aria-controls="learning-sidebar" aria-expanded={mobile?open:!collapsed} onClick={toggleMenu}><Menu size={21}/></button><span>{tx("فضای یادگیری")}</span><ChevronLeft size={14} /><strong>{tx(title)}</strong></div><Link to="" className="header-brand" aria-label="DevPath" dir="ltr">DevPath</Link><div className="top-actions"><span className="date-today">{tx(new Intl.DateTimeFormat(dateLocale(), {
               timeZone: "Asia/Tehran",
               weekday: "long",
               day: "numeric",

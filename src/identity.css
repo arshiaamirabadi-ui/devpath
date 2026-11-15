@@ -128,3 +128,20 @@ main[data-page=today]>.panel:nth-of-type(2) { border-top: 3px solid var(--tone-a
 .progress-page .odyssey-chapter { background: linear-gradient(135deg,var(--wash-violet),var(--surface)); border-radius: 32px 8px 32px 8px; }
 main[data-page=guide]>.panel:not(.guide-section) { background: linear-gradient(135deg,var(--wash-amber),var(--surface) 60%); border-top: 3px solid var(--tone-amber); border-radius: 24px 8px 24px 8px; }
 .guide-section::before { content: ''; position: absolute; inset-inline-end: 20px; inset-block-start: 20px; width: 90px; height: 90px; border: 12px solid var(--tone); opacity: .05; border-radius: 50%; pointer-events: none; z-index: -1; }
+
+/* Equal side columns keep the wordmark at the exact center of the header. */
+.topbar { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 16px; }
+.header-brand { font-size: 22px; font-weight: 700; line-height: 1.5; color: var(--text); letter-spacing: -.4px; justify-self: center; }
+.header-brand:hover { color: var(--tone-blue); }
+.topbar .breadcrumb { min-width: 0; overflow: hidden; }
+.topbar .breadcrumb>strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar .sidebar-toggle { flex-shrink: 0; }
+.topbar .top-actions { justify-self: end; white-space: nowrap; }
+@media(max-width:1100px) { .topbar .date-today,.topbar .breadcrumb>span,.topbar .breadcrumb>.lucide-chevron-left { display: none; } }
+@media(max-width:600px) {
+ .topbar { gap: 8px; padding-inline: 14px; }
+ .header-brand { font-size: 20px; }
+ .topbar .breadcrumb>strong { display: none; }
+ .topbar .top-actions { gap: 6px; }
+ .topbar .top-actions .icon-button { margin-inline-start: 0; min-width: 36px; min-height: 36px; padding: 6px; }
+}
