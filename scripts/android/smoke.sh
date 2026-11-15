@@ -4,7 +4,7 @@ mkdir -p android-smoke
 adb wait-for-device
 adb shell svc wifi disable
 adb shell svc data disable
-adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+adb install -r "${APK_UNDER_TEST:-android/app/build/outputs/apk/debug/app-debug.apk}"
 adb logcat -c
 adb shell am start -W -n io.github.arshiaamirabadi.devpath/.MainActivity
 for attempt in $(seq 1 18); do

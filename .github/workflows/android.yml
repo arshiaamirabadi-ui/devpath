@@ -54,11 +54,15 @@ jobs:
       - name: Launch Android emulator
         run: |
           "$ANDROID_HOME/emulator/emulator" -avd devpath-test -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -no-metrics > /tmp/devpath-emulator.log 2>&1 &
-          adb wait-for-device
+          EMULATOR_PID=$!
+          sleep 5
+          if ! kill -0 "$EMULATOR_PID" 2>/dev/null; then cat /tmp/devpath-emulator.log; exit 1; fi
+          if ! timeout 150 adb wait-for-device; then cat /tmp/devpath-emulator.log; exit 1; fi
           for n in $(seq 1 80); do
             if adb shell getprop sys.boot_completed | grep -q 1; then break; fi
             sleep 3
           done
+          if ! adb shell getprop sys.boot_completed | grep -q 1; then cat /tmp/devpath-emulator.log; exit 1; fi
           adb shell settings put global window_animation_scale 0
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
@@ -69,5 +73,7 @@ jobs:
         if: always()
         with:
           name: devpath-android-smoke
-          path: android-smoke/
+          path: |
+            android-smoke/
+            /tmp/devpath-emulator.log
           retention-days: 14

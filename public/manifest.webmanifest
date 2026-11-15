@@ -1,0 +1,5 @@
+{
+ "id":"./", "name":"DevPath", "short_name":"DevPath", "start_url":"./#/", "scope":"./", "display":"standalone", "background_color":"#111116", "theme_color":"#111116",
+ "icons":[{"src":"icons/devpath.png","sizes":"1254x1254","type":"image/png","purpose":"any"}],
+ "shortcuts":[{"name":"Today","url":"./#/today"},{"name":"Odyssey","url":"./#/progress"}]
+}

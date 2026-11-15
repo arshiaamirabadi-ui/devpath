@@ -1,2 +1,2 @@
-import {defineConfig} from '@playwright/test';
-export default defineConfig({testDir:'./e2e',timeout:45000,fullyParallel:false,workers:1,use:{baseURL:'http://127.0.0.1:5187',channel:'msedge',viewport:{width:1440,height:1000},screenshot:'only-on-failure'},reporter:'list'});
+import {defineConfig,devices} from '@playwright/test';
+export default defineConfig({testDir:'./e2e',timeout:45000,fullyParallel:false,workers:1,use:{baseURL:'http://127.0.0.1:5187',viewport:{width:1440,height:1000},screenshot:'only-on-failure'},projects:[{name:'edge',testIgnore:'**/ipad.spec.ts',use:{channel:'msedge'}},{name:'ipad-webkit',testMatch:'**/ipad.spec.ts',use:{browserName:'webkit',...devices['iPad Pro 11']}}],reporter:'list'});

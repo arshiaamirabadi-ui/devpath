@@ -2,6 +2,7 @@ import {useEffect,useId,useRef,useState,type MouseEvent,type FocusEvent} from 'r
 import {createPortal} from 'react-dom';
 import {ArrowUpLeft,X,BookOpen} from 'lucide-react';
 import {weeks} from './content';
+import {COMPACT_NAVIGATION} from './navigation-layout';
 import {Link} from './components';
 import {fa} from './logic';
 import {tx} from './locale';
@@ -17,12 +18,12 @@ export function useTrailPeek(){
   if(suppress.current)return;keep();const rect=trigger.getBoundingClientRect(),main=trigger.closest('.main-shell')!.getBoundingClientRect(),low=Math.max(16,main.left+16),high=Math.min(innerWidth-16,main.right-16),width=Math.min(280,high-low),right=high-rect.right,left=rect.left-low;
   const x=right>=width+16?rect.right+16:left>=width+16?rect.left-width-16:Math.max(low,Math.min(high-width,rect.x+rect.width/2-width/2));
   const beside=right>=width+16||left>=width+16,y=beside?rect.top-18:rect.bottom+16;
-  setPeek({number,x,y:Math.max(16,Math.min(innerHeight-(matchMedia('(max-width:760px)').matches?340:270),y)),width,trigger});
+  setPeek({number,x,y:Math.max(16,Math.min(innerHeight-(matchMedia(COMPACT_NAVIGATION).matches?340:270),y)),width,trigger});
  };
  const leave=()=>{keep();timer.current=setTimeout(()=>hide(),180)};
  const blur=(event:FocusEvent<HTMLElement>)=>{if(cardRef.current?.contains(event.relatedTarget as Node))return;leave()};
  const activate=(event:MouseEvent<HTMLAnchorElement>,number:number)=>{
-  if(matchMedia('(max-width:760px)').matches&&!event.ctrlKey&&!event.metaKey&&tap.current!==number){event.preventDefault();tap.current=number;reveal(event.currentTarget,number);requestAnimationFrame(()=>cardRef.current?.querySelector<HTMLAnchorElement>('a')?.focus({preventScroll:true}))}else hide();
+  if(matchMedia(COMPACT_NAVIGATION).matches&&!event.ctrlKey&&!event.metaKey&&tap.current!==number){event.preventDefault();tap.current=number;reveal(event.currentTarget,number);requestAnimationFrame(()=>cardRef.current?.querySelector<HTMLAnchorElement>('a')?.focus({preventScroll:true}))}else hide();
  };
  useEffect(()=>{if(!peek)return;const key=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();hide(true)}};const outside=(event:PointerEvent)=>{const target=event.target as Element;if(!cardRef.current?.contains(target)&&!target.closest('.trail-stop'))hide()};const scroll=(event:Event)=>{if((event.target as Element)?.closest?.('.trail-peek'))return;hide()};document.addEventListener('keydown',key);document.addEventListener('pointerdown',outside);window.addEventListener('scroll',scroll,true);const resize=()=>hide();window.addEventListener('resize',resize);return()=>{document.removeEventListener('keydown',key);document.removeEventListener('pointerdown',outside);window.removeEventListener('scroll',scroll,true);window.removeEventListener('resize',resize)}},[peek?.number]);
  useEffect(()=>()=>clearTimeout(timer.current),[]);

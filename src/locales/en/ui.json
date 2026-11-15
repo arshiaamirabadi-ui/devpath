@@ -669,5 +669,8 @@
   "Main task of the day",
   "Study time block",
   "Stage details",
-  "The backup could not be saved or shared. Please try again."
+  "The backup could not be saved or shared. Please try again.",
+  "DevPath on iPad",
+  "Open this page in Safari. In the Share menu, choose Add to Home Screen and leave Open as Web App enabled if that option appears.",
+  "For offline use, first open the app online and allow it to finish loading. External resources still need an internet connection."
 ]

@@ -9,6 +9,7 @@ import ActivityImpact from "./ActivityImpact";
 import {saveBackup} from "./backup-export";
 import LearningCalendar from './LearningCalendar';
 import DailyAgenda from './DailyAgenda';
+import InstallGuide from './InstallGuide';
 import { Surface, trackTones, TrackMark } from "./ui";
 import { projectTrack } from "./learning";
 import { checklistGuides } from "./lessons";
@@ -321,7 +322,7 @@ export function SettingsPage() {
             ...s.settings,
             theme: e.target.value as "light" | "dark"
           }
-        }))}><option value="light">{tx("روشن")}</option><option value="dark">{tx("تاریک")}</option></select></label></section><section className="panel"><h2>{tx("نسخه پشتیبان")}</h2><p>{tx("خروجی شامل تنظیمات، وضعیت فعالیت‌ها، زمان‌ها، یادداشت‌ها، مرورها، پروژه‌ها، منابع، مهارت‌ها و جابه‌جایی روزهاست. محتوای ثابت آموزشی در سورس برنامه قرار دارد.")}</p><div className="button-row"><button className="primary" onClick={() => {
+        }))}><option value="light">{tx("روشن")}</option><option value="dark">{tx("تاریک")}</option></select></label></section><InstallGuide/><section className="panel"><h2>{tx("نسخه پشتیبان")}</h2><p>{tx("خروجی شامل تنظیمات، وضعیت فعالیت‌ها، زمان‌ها، یادداشت‌ها، مرورها، پروژه‌ها، منابع، مهارت‌ها و جابه‌جایی روزهاست. محتوای ثابت آموزشی در سورس برنامه قرار دارد.")}</p><div className="button-row"><button className="primary" onClick={() => {
           void exportBackup();
         }}><Download size={17} />{tx("خروجی JSON")}</button><label className="upload-button"><Upload size={17} />{tx("انتخاب فایل بازیابی")}<input aria-label={tx("فایل بازیابی JSON")} type="file" accept=".json,application/json" onChange={async e => {
             setError("");
