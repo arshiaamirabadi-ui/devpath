@@ -1,0 +1,34 @@
+.top-actions .language-toggle { margin-inline-start: 0; min-width: 38px; min-height: 36px; padding: 6px; font: 600 12px/1.4 var(--font-ui); }
+.language-error { position: fixed; bottom: 20px; inset-inline-end: 20px; background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning); padding: 16px; z-index: 80; border-radius: 10px; }
+:root[lang=en] { --font-ui: 'Yekan Bakh', 'Segoe UI', Arial, sans-serif; }
+[dir=ltr] table,[dir=ltr] .map-related button,[dir=ltr] .mini-path strong,[dir=ltr] .mini-path>span:not(.eyebrow),[dir=ltr] input[type=date],[dir=ltr] input[type=number] { text-align: left; }
+[dir=ltr] .map-related svg { left: auto; right: 10px; }
+[dir=ltr] .profile .avatar { font-family: var(--font-ui); }
+[dir=ltr] .breadcrumb>.lucide-chevron-left,[dir=ltr] .primary>.lucide-arrow-left,[dir=ltr] .banner-link>.lucide-arrow-left,[dir=ltr] .lucide-arrow-up-left { transform: scaleX(-1); }
+[dir=ltr] .primary,[dir=ltr] .outline,[dir=ltr] .banner-link { white-space: normal; }
+[dir=ltr] .activity-summary>a,[dir=ltr] .week-tile h3,[dir=ltr] .project-card h2 { overflow-wrap: anywhere; }
+[dir=ltr] .odyssey-map,[dir=ltr] .study-chart { direction: ltr; }
+[dir=ltr] .map-node.graph-node { direction: ltr; text-align: left; }
+[dir=ltr] .map-node .graph-node-title { font-size: 17px; line-height: 1.45; }
+[dir=ltr] .map-node .graph-node-meta { margin-top: 6px; }
+[dir=ltr] .map-root { direction: ltr; }
+[dir=ltr] .journey-copy h2 { line-height: 1.5; }
+[dir=ltr] .nav-link { font-size: 13px; }
+@media(max-width:520px) {
+ [dir=ltr] .skip { inset-inline-start: 16px; }
+ [dir=ltr] .topbar { padding-inline: 14px; }
+ [dir=ltr] .breadcrumb { gap: 6px; font-size: 12px; }
+ [dir=ltr] .breadcrumb>span { display: none; }
+ [dir=ltr] .top-actions { gap: 7px; }
+ [dir=ltr] .top-actions .icon-button { margin-inline-start: 0; }
+ [dir=ltr] .voyage-statusbar { flex-wrap: wrap; }
+ [dir=ltr] .page-heading h1 { font-size: 25px; }
+ [dir=ltr] .calendar-week button span { font-size: 10px; }
+ [dir=ltr] .calendar-week button small { font-size: 9px; }
+ [dir=ltr] .stat-value>strong { font-size: 25px; }
+ [dir=ltr] .stat-value small { font-size: 11px; }
+}
+@media(max-width:760px) {
+ [dir=ltr] .sidebar { transform: translateX(-100%); }
+ [dir=ltr] .sidebar.is-open { transform: translateX(0); }
+}

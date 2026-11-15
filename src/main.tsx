@@ -8,5 +8,12 @@ import './style.css';
 import './interface.css';
 import './workspace.css';
 import {StoreProvider} from './store';
+import {LanguageProvider} from './LanguageProvider';
+import {prepareLocale,preferredLanguage} from './locale';
+import './language.css';
 import App from './App';
-createRoot(document.getElementById('root')!).render(<React.StrictMode><StoreProvider><App/></StoreProvider></React.StrictMode>);
+async function start(){
+ try{await prepareLocale(preferredLanguage())}catch{await prepareLocale('fa')}
+ createRoot(document.getElementById('root')!).render(<React.StrictMode><LanguageProvider><StoreProvider><App/></StoreProvider></LanguageProvider></React.StrictMode>);
+}
+void start();

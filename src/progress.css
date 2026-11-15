@@ -101,7 +101,7 @@
 .study-heatmap>span[data-level='2'] { background: #9572cf; }
 .study-heatmap>span[data-level='3'] { background: #c09cf5; }
 .weekly-chart { display: flex; align-items: flex-end; gap: 8px; padding: 16px 0 8px; overflow-x: auto; scrollbar-width: thin; direction: ltr; }
-.weekly-bar { display: flex; flex: 1 0 23px; flex-direction: column; gap: 8px; font-size: 12px; text-align: center; color: var(--muted); padding: 4px 2px; border-radius: 5px; transition: background .15s,transform .15s; }
+.weekly-bar { position: relative; display: flex; flex: 1 0 23px; flex-direction: column; gap: 8px; font-size: 12px; text-align: center; color: var(--muted); padding: 4px 2px; border-radius: 5px; transition: background .15s,transform .15s; }
 .weekly-bar:hover { background: var(--wash-blue); transform: translateY(-3px); }
 .weekly-bar.current { background: var(--wash-violet); outline: 1px solid var(--edge-violet); color: var(--tone-violet); }
 .bar-track { position: relative; height: 140px; display: block; background: var(--surface-raised); border-radius: 5px; border: 1px solid var(--line); min-width: 16px; }

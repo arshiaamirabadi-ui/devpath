@@ -1,3 +1,4 @@
+import {numberLocale,dateLocale} from './locale';
 import {z} from 'zod';
 export const KEY='rahgo.personal.v1';
 export const TOTAL_HOURS=390;
@@ -46,5 +47,5 @@ export function buildSchedule(activities:{id:string;minutes:number;optional?:boo
  let end=settings.startDate,capacity=0;while(capacity<TOTAL_HOURS*60-0.001){if(study(end))capacity+=daily;if(capacity<TOTAL_HOURS*60-0.001)end=addDays(end,1)}
  return {dates,starts,portions,end,calendarWeeks:Math.ceil(TOTAL_HOURS/settings.weeklyHours)};
 }
-export const fa=(n:number)=>new Intl.NumberFormat('fa-IR',{maximumFractionDigits:1}).format(n);
-export function displayDate(date:string):string{return new Intl.DateTimeFormat('fa-IR',{timeZone:'Asia/Tehran',month:'long',day:'numeric',year:'numeric'}).format(new Date(date+'T12:00:00Z'))}
+export const fa=(n:number)=>new Intl.NumberFormat(numberLocale(),{maximumFractionDigits:1}).format(n);
+export function displayDate(date:string):string{return new Intl.DateTimeFormat(dateLocale(),{timeZone:'Asia/Tehran',month:'long',day:'numeric',year:'numeric'}).format(new Date(date+'T12:00:00Z'))}
