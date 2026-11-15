@@ -7,6 +7,8 @@ import { PageHeading } from "./App";
 import { fa, displayDate } from "./logic";
 import { Link, Meter, tracks } from "./components";
 import { StatCard, Surface, trackTones, TrackMark } from "./ui";
+import {useLearningClock} from "./useLearningClock";
+import {StreakCard} from "./Streak";
 import Odyssey from "./Odyssey";
 import { CompletionDonut, TrackRadar, StudyChart, WeeklyChart } from "./ProgressCharts";
 import "./progress.css";
@@ -14,12 +16,14 @@ export default function ProgressPage() {
   const {
     state
   } = useStore();
-  const report = useMemo(() => learningOverview(state), [state]);
+  const {today}=useLearningClock();
+  const report = useMemo(() => learningOverview(state,today), [state,today]);
   const [period, setPeriod] = useState(7);
   return <div className="progress-page">
   <PageHeading eyebrow="از تروا تا ایتاکا" title={tx("پیشرفت و سفر ادیسه")} description="آنچه آموخته‌ای، مسیری که پیموده‌ای و افقی که پیش رو داری." action={<Link className="outline" to="skills"><GraduationCap size={18} />{tx("دیدن مهارت‌ها")}</Link>} />
   <p className="sr-only" role="status" aria-live="polite">{tx(fa(report.completion))}{tx(" درصد تکمیل؛ ")}{tx(fa(report.learning))}{tx(" درصد شواهد؛ کشتی در هفته ")}{tx(fa(report.currentWeek))}.</p>
   <Odyssey report={report} />
+  <StreakCard/>
   <div className="stat-grid"><StatCard tone="blue" label="تکمیل مسیر" icon={Flag} value={<>{tx(fa(report.completion))}<small>{tx("٪")}</small></>} progress={report.completion} detail={fa(report.done) + " فعالیت از " + fa(report.total)} /><StatCard tone="violet" label="شواهد یادگیری" icon={BookOpen} value={<>{tx(fa(report.learning))}<small>{tx("٪")}</small></>} detail="مطالعه، تمرین، خروجی و توضیح" /><StatCard tone="rose" label="مهارت با تمرین عملی" icon={Target} value={fa(report.practiced)} detail={fa(report.started) + " مهارت در حال یادگیری"} /><StatCard tone="amber" label="پروژه‌های تحویل‌شده" icon={Anchor} value={fa(report.delivered)} detail={fa(report.projectProgress) + "٪ چک‌لیست‌های اصلی"} /></div>
   <div className="progress-two-columns"><Surface tone="blue" className="chart-panel"><h2><ChartNoAxesCombined size={21} />{tx("تصویر کلی پیشرفت")}</h2><CompletionDonut report={report} /><p className="muted">{tx("تکمیل با زمان برنامه‌ریزی‌شده وزن می‌گیرد؛ آزمایش اختیاری CUDA در مخرج اصلی نیست.")}</p></Surface><Surface tone="violet" className="chart-panel"><h2><Target size={21} />{tx("تعادل مسیرهای یادگیری")}</h2><TrackRadar report={report} /></Surface></div>
   <Surface tone="violet" className="chart-panel"><div className="split"><h2><Activity size={21} />{tx("ریتم واقعی مطالعه")}</h2><div className="chart-tabs" aria-label={tx("بازه نمودار")}>{tx([7, 30].map(n => <button key={n} aria-pressed={period === n} onClick={() => setPeriod(n)}>{tx(fa(n))}{tx(" روز اخیر")}</button>))}</div></div><p className="muted">{tx("روزهایی که برای آموختن وقت گذاشته‌ای؛ بر پایهٔ زمان مطالعه‌ات.")}</p><StudyChart days={report.studyDays.slice(-period)} /><div className="study-heatmap" aria-label={tx("تقویم مطالعهٔ ۳۰ روز اخیر")}>{tx(report.studyDays.map(d => <span key={d.date} title={tx(displayDate(d.date) + " · " + fa(d.minutes) + " دقیقه")} aria-label={tx(displayDate(d.date) + " · " + fa(d.minutes) + " دقیقه")} data-level={d.minutes === 0 ? 0 : d.minutes < 30 ? 1 : d.minutes < 90 ? 2 : 3} />))}</div><small className="muted">{tx("۳۰ روز اخیر · رنگ پررنگ‌تر یعنی زمان ثبت‌شدهٔ بیشتر")}</small></Surface>

@@ -13,6 +13,7 @@ import {prepareLocale,preferredLanguage} from './locale';
 import './language.css';
 import './sidebar.css';
 import './identity.css';
+import './mobile-experience.css';
 import App from './App';
 async function start(){
  try{await prepareLocale(preferredLanguage())}catch{await prepareLocale('fa')}

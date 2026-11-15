@@ -22,7 +22,7 @@ function NavEntry({item,active,collapsed,tone,onNavigate}:{item:Item;active:bool
 
 export default function Sidebar({items,route,open,collapsed,mobile,progress,onClose,onNavigate}:{items:readonly Item[];route:string;open:boolean;collapsed:boolean;mobile:boolean;progress:number;onClose:()=>void;onNavigate:()=>void}){
  const ref=useRef<HTMLElement>(null);
- useEffect(()=>{if(open)ref.current?.querySelector<HTMLElement>('.nav-link[aria-current="page"]')?.focus()},[open]);
+ useEffect(()=>{if(open)(ref.current?.querySelector<HTMLElement>('.nav-link[aria-current="page"]')??ref.current?.querySelector<HTMLElement>('.mobile-close'))?.focus()},[open]);
  const keyboard=(event:KeyboardEvent<HTMLElement>)=>{
   if(!mobile||!open)return;
   if(event.key==='Escape'){event.preventDefault();onClose();return}

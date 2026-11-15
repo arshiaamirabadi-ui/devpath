@@ -9,7 +9,7 @@ const date=z.string().refine(s=>isISO(s)&&s>='1900-01-01'&&s<='2200-12-31','تا
 const text=z.string().max(20000);
 const url=z.string().max(2048).refine(s=>!s||/^https?:\/\//i.test(s),'فقط لینک http یا https مجاز است');
 const id=z.string().min(1).max(150).refine(s=>!['__proto__','constructor','prototype'].includes(s));
-export const activityState=z.object({status:z.enum(['todo','doing','done']),read:z.boolean(),practiced:z.boolean(),explained:z.boolean(),output:url});
+export const activityState=z.object({status:z.enum(['todo','doing','done']),read:z.boolean(),practiced:z.boolean(),explained:z.boolean(),output:url,completedOn:date.optional()});
 const sessionSchema=z.object({id,activityId:id,date,minutes:z.number().int().min(1).max(1440)});
 export const stateSchema=z.object({
  version:z.literal(1),
