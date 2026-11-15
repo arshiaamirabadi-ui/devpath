@@ -1,6 +1,6 @@
 import { tx } from "./locale";
 import type { ReactNode, HTMLAttributes } from "react";
-import type { LucideIcon } from "lucide-react";
+import { Code2, BrainCircuit, Cpu, Rocket, type LucideIcon } from "lucide-react";
 export type Tone = "blue" | "violet" | "rose" | "amber";
 export const trackTones = {
   backend: "blue",
@@ -57,4 +57,10 @@ export function LessonHeading({
 }) {
   const Heading = compact ? "h3" : "h2";
   return <Heading className="lesson-heading" data-tone={tone}><span className="section-icon"><Icon size={21} /></span>{tx(children)}</Heading>;
+}
+
+export const trackIcons = { backend: Code2, ai: BrainCircuit, systems: Cpu, project: Rocket } as const;
+export function TrackMark({track}:{track:keyof typeof trackTones}) {
+ const Icon=trackIcons[track];
+ return <span className="track-mark" data-tone={trackTones[track]} data-track={track} aria-hidden="true"><Icon size={20}/></span>;
 }

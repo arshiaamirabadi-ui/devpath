@@ -6,7 +6,7 @@ test('dashboard defers heavy sections; raised cards and buttons respond to hover
  await page.goto('/#/');await expect(page.getByRole('heading',{name:'سلام، به مسیرت خوش آمدی',exact:true})).toBeVisible();
  expect(requested.some(url=>/\/(Diagram|pages|LessonContent)\.tsx|\/lessons-(backend|ai|systems)\.ts/.test(url))).toBe(false);
  const today=page.getByRole('link',{name:'برنامه امروز',exact:true}).last();await today.hover();
- await expect.poll(()=>today.evaluate(e=>getComputedStyle(e).transform)).not.toBe('none');await page.mouse.down();await expect(today).toHaveCSS('box-shadow',/inset/);await page.mouse.up();await expect(page).toHaveURL(/#\/today$/);
+ await expect(today).toHaveCSS('transform','none');await expect(today).toHaveCSS('color','rgb(255, 255, 255)');await page.mouse.down();await expect(today).toHaveCSS('box-shadow',/inset/);await page.mouse.up();await expect(page).toHaveURL(/#\/today$/);
  await page.goto('/#/projects');const card=page.locator('.project-card').first();await expect(card).toHaveAttribute('data-tone','blue');await card.hover();await expect.poll(()=>card.evaluate(e=>getComputedStyle(e).transform)).not.toBe('none');await page.screenshot({path:testInfo.outputPath('project-hover-dark.png')});
  await card.click();await expect(page).toHaveURL(/#\/project\//);
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/#/projects');await page.locator('.project-card').first().hover();await expect(page.locator('.project-card').first()).toHaveCSS('transform','none');

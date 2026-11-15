@@ -5,7 +5,7 @@ import { useStore } from "./store";
 import { blankActivity, displayDate, fa, recordSession, todayISO, type Session } from "./logic";
 import { weeks, type Activity, type Track } from "./content";
 import LessonContent from "./lesson-loader";
-import { trackTones } from "./ui";
+import { TrackMark, trackTones } from "./ui";
 export const tracks: Record<Track, string> = {
   backend: "برنامه‌نویسی و Backend",
   ai: "هوش مصنوعی و ML",
@@ -18,7 +18,7 @@ export function Tag({
 }: {
   track: Track;
 }) {
-  return <span className={"tag " + track}>{tx(tracks[track])}</span>;
+  return <span className={"tag " + track} data-tone={trackTones[track]}><TrackMark track={track}/>{tx(tracks[track])}</span>;
 }
 export function Link({
   to,

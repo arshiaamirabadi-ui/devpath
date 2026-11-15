@@ -1,11 +1,11 @@
 import { tx } from "./locale";
 import { useState } from "react";
-import { ArrowUpLeft, BookOpen, Check, Link2, Sparkles, Target } from "lucide-react";
+import { ArrowUpLeft, BookOpen, Check, Link2, Sparkles, Target, SlidersHorizontal } from "lucide-react";
 import { skills, projects } from "./content";
 import { useStore } from "./store";
 import { PageHeading } from "./App";
 import { Link, Meter, Tag, tracks } from "./components";
-import { Surface, trackTones, StatCard } from "./ui";
+import { Surface, trackTones, StatCard, TrackMark } from "./ui";
 import { skillReport, autoLabels } from "./learning";
 import { fa } from "./logic";
 export default function SkillsPage({
@@ -34,7 +34,7 @@ export default function SkillsPage({
    <StatCard tone="rose" icon={Sparkles} label="آمادهٔ توضیح" value={fa(reports.filter(s => s.autoLevel === 3).length)} detail="فهمی که می‌توانی بیانش کنی" />
   </div>
   <Surface tone="violet" className="connection-explainer"><Link2 size={24} /><div><h2>{tx("دانستن، انجام‌دادن، توضیح‌دادن")}</h2><p>{tx("یک مهارت زمانی محکم می‌شود که بتوانی آن را به کار ببری، نتیجه‌اش را نشان بدهی و توضیحش بدهی.")}</p><details><summary>{tx("راهنمای ارزیابی")}</summary><p>{tx("۵۰٪ تکمیل درس‌ها، ۱۵٪ شاهد مطالعه، ۲۵٪ تمرین یا خروجی مرتبط، ۱۰٪ توانایی توضیح. چک‌لیست‌های مشخص پروژه به شاهد تمرین کمک می‌کنند. این امتیاز، شواهد ثبت‌شدهٔ توست و آزمون مستقل تسلط نیست.")}</p><small>{tx("برداشتن هر تیک، اثر همان شاهد را برمی‌گرداند. ثبت زمان و بازکردن منبع امتیاز یادگیری نمی‌سازد.")}</small></details></div></Surface>
-  <section className="panel skill-filters"><div className="filters"><label>{tx("مسیر")}<select aria-label={tx("مسیر")} value={track} onChange={e => setTrack(e.target.value)}><option value="all">{tx("همه مسیرها")}</option>{tx(Object.entries(tracks).map(([k, v]) => <option key={k} value={k}>{tx(v)}</option>))}</select></label><label>{tx("نمایش مهارت‌ها")}<select value={filter} onChange={e => setFilter(e.target.value)}><option value="all">{tx("همه مهارت‌ها")}</option><option value="active">{tx("دارای پیشرفت")}</option><option value="practiced">{tx("دارای تمرین عملی")}</option></select></label>{tx(focused && <Link className="outline" to="skills">{tx("همه مهارت‌ها")}</Link>)}</div></section>
+  <section className="skill-filters" aria-label={tx("نمایش مهارت‌ها")}><div className="track-filter" role="group" aria-label={tx("مسیر")}><button aria-pressed={track==='all'} onClick={()=>setTrack('all')}><SlidersHorizontal size={17}/>{tx("همه مسیرها")}</button>{Object.entries(tracks).map(([key,label])=><button key={key} data-tone={trackTones[key as keyof typeof trackTones]} aria-pressed={track===key} onClick={()=>setTrack(key)}><TrackMark track={key as keyof typeof trackTones}/>{tx(label)}</button>)}</div><label className="skill-display"><SlidersHorizontal size={17}/><span className="sr-only">{tx("نمایش مهارت‌ها")}</span><select aria-label={tx("نمایش مهارت‌ها")} value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">{tx("همه مهارت‌ها")}</option><option value="active">{tx("دارای پیشرفت")}</option><option value="practiced">{tx("دارای تمرین عملی")}</option></select></label>{focused&&<Link className="outline" to="skills">{tx("همه مهارت‌ها")}</Link>}</section>
   <div className="skills-grid">{list.map(s => {
         const v = state.skills[s.id] ?? {
           level: 0,

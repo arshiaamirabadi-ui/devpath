@@ -72,3 +72,10 @@ export function learningOverview(state:PersonalState,today=todayISO()){
  const requiredProjects=projects.filter(p=>p.id!=='cuda-optional');const checks=requiredProjects.reduce((n,p)=>n+p.checklist.length,0),checked=requiredProjects.reduce((n,p)=>n+(state.projects[p.id]?.checks.filter(i=>i<p.checklist.length).length??0),0);
  return {completion:progress(activities,state),learning:precise(ratio(activities,a=>activityLearning(a,state))),currentWeek:weekReports[index].number,currentMonth:weekReports[index].month,voyage,finished:first<0,reports,weeks:weekReports,tracks,studyDays,done:activities.filter(a=>state.activities[a.id]?.status==='done').length,total:activities.length,practiced:reports.filter(s=>s.autoLevel>=2).length,explained:reports.filter(s=>s.autoLevel===3).length,started:reports.filter(s=>s.score>0).length,projectProgress:checks?Math.round(checked/checks*100):0,delivered:requiredProjects.filter(p=>p.checklist.every((_,i)=>state.projects[p.id]?.checks.includes(i))).length,next:activities.find(a=>state.activities[a.id]?.status!=='done'),logbook:state.notes.filter(n=>n.text.trim()).length,reviews:Object.values(state.reviews).filter(r=>Object.values(r).some(v=>v.trim())).length,sources:resources.filter(r=>state.resources[r.id]?.status==='read').length,selfSupported:reports.filter(s=>s.selfLevel>0&&s.selfEvidence.trim()).length};
 }
+
+export const projectTrack = (id:string):Track => {
+ const linked=skills.filter(s=>projectEvidence[s.id]?.some(p=>p.projectId===id));
+ const counts=(["backend","ai","systems"] as const).map(track=>({track,count:linked.filter(s=>s.track===track).length})).sort((a,b)=>b.count-a.count);
+ if(id==='cuda-optional')return 'systems';
+ return counts[0].count?counts[0].track:"project";
+};

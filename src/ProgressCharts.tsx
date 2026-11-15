@@ -3,7 +3,7 @@ import { Link } from "./components";
 import { fa, displayDate } from "./logic";
 import { tracks } from "./components";
 import { learningOverview } from "./learning";
-import { trackTones } from "./ui";
+import { TrackMark, trackTones } from "./ui";
 type Report = ReturnType<typeof learningOverview>;
 export function CompletionDonut({
   report
@@ -22,7 +22,7 @@ export function TrackRadar({
     const angle = (index * 90 - 90) * Math.PI / 180;
     return `${150 + Math.cos(angle) * value} ${140 + Math.sin(angle) * value}`;
   };
-  return <><svg className="track-radar" viewBox="0 0 300 290" role="img" aria-label={tx("تعادل شواهد چهار مسیر: " + report.tracks.map(t => tracks[t.id] + " " + fa(t.learning) + " درصد").join("، "))}>{tx([25, 50, 75, 100].map(n => <polygon key={n} points={[0, 1, 2, 3].map(i => point(i, n)).join(",")} className="radar-grid" />))}{tx(report.tracks.map((t, i) => <line key={t.id} x1="150" y1="140" x2={point(i, 100).split(" ")[0]} y2={point(i, 100).split(" ")[1]} className="radar-grid" />))}<polygon points={report.tracks.map((t, i) => point(i, t.learning)).join(",")} className="radar-fill" />{tx(report.tracks.map((t, i) => <circle key={t.id} cx={point(i, t.learning).split(" ")[0]} cy={point(i, t.learning).split(" ")[1]} r="4" className="radar-dot"><title>{tx(tracks[t.id])}: {tx(fa(t.learning))}{tx("٪")}</title></circle>))}<text x="150" y="22" textAnchor="middle">Backend</text><text x="270" y="144" textAnchor="middle">AI</text><text x="150" y="266" textAnchor="middle">{tx("سیستم‌ها")}</text><text x="28" y="144" textAnchor="middle">{tx("پروژه")}</text></svg><div className="radar-legend">{tx(report.tracks.map(t => <span key={t.id} data-tone={trackTones[t.id]}><i />{tx(tracks[t.id])}<strong>{tx(fa(t.learning))}{tx("٪")}</strong></span>))}</div></>;
+  return <><svg className="track-radar" viewBox="0 0 300 290" role="img" aria-label={tx("تعادل شواهد چهار مسیر: " + report.tracks.map(t => tracks[t.id] + " " + fa(t.learning) + " درصد").join("، "))}>{tx([25, 50, 75, 100].map(n => <polygon key={n} points={[0, 1, 2, 3].map(i => point(i, n)).join(",")} className="radar-grid" />))}{tx(report.tracks.map((t, i) => <line key={t.id} x1="150" y1="140" x2={point(i, 100).split(" ")[0]} y2={point(i, 100).split(" ")[1]} className="radar-grid" />))}<polygon points={report.tracks.map((t, i) => point(i, t.learning)).join(",")} className="radar-fill" />{tx(report.tracks.map((t, i) => <circle key={t.id} cx={point(i, t.learning).split(" ")[0]} cy={point(i, t.learning).split(" ")[1]} r="4" data-tone={trackTones[t.id]} className="radar-dot"><title>{tx(tracks[t.id])}: {tx(fa(t.learning))}{tx("٪")}</title></circle>))}<text x="150" y="22" textAnchor="middle">Backend</text><text x="270" y="144" textAnchor="middle">AI</text><text x="150" y="266" textAnchor="middle">{tx("سیستم‌ها")}</text><text x="28" y="144" textAnchor="middle">{tx("پروژه")}</text></svg><div className="radar-legend">{tx(report.tracks.map(t => <span key={t.id} data-tone={trackTones[t.id]}><TrackMark track={t.id}/>{tx(tracks[t.id])}<strong>{tx(fa(t.learning))}{tx("٪")}</strong></span>))}</div></>;
 }
 export function StudyChart({
   days

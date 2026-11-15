@@ -5,9 +5,10 @@ import { connections, nodes, type GraphNode } from "./graph";
 import { projects, resources, type Track } from "./content";
 import { useStore } from "./store";
 import { fa } from "./logic";
-import { skillReport } from "./learning";
+import { projectTrack, skillReport } from "./learning";
 import { External, Link, Meter, Tag, allActivities, tracks } from "./components";
 import { PageHeading } from "./App";
+import { TrackMark, trackTones } from "./ui";
 import { zoomAt, panBy, type Camera } from "./map-camera";
 import { buildTree, TREE_W as NODE_W, TREE_H as NODE_H } from "./map-tree";
 const order: Track[] = ["backend", "ai", "systems", "project"];
@@ -191,12 +192,12 @@ export default function Diagram() {
   return <>
   <PageHeading eyebrow="هر بار یک مسیر؛ هر موضوع یک قدم مشخص" title={tx("درخت یادگیری")} description="از ریشه شروع کن و شاخه‌ها را دنبال کن. هر کادر یک موضوع است؛ درس‌ها، پیش‌نیازهای مشترک و قدم‌های بعدی را با انتخاب آن ببین." action={<Link className="outline" to="roadmap">{tx("برنامه ۲۶ هفته ")}<ArrowLeft size={16} /></Link>} />
   <section className="panel map-controls">
-   <div className="map-track-tabs" role="group" aria-label={tx("انتخاب مسیر نقشه")}>{tx(order.map(t => <button key={t} aria-pressed={track === t} onClick={() => changeTrack(t)}>{tx(tracks[t])}<small>{tx(fa(nodes.filter(n => n.track === t).length))}</small></button>))}<button aria-pressed={track === "all"} onClick={() => changeTrack("all")}>{tx("همه مسیرها")}<small>{tx("۴۲")}</small></button></div>
+   <div className="map-track-tabs" role="group" aria-label={tx("انتخاب مسیر نقشه")}>{tx(order.map(t => <button key={t} data-tone={trackTones[t]} aria-pressed={track === t} onClick={() => changeTrack(t)}><TrackMark track={t}/>{tx(tracks[t])}<small>{tx(fa(nodes.filter(n => n.track === t).length))}</small></button>))}<button aria-pressed={track === "all"} onClick={() => changeTrack("all")}>{tx("همه مسیرها")}<small>{tx("۴۲")}</small></button></div>
    <div className="map-toolbar"><div className="search-field"><Search size={18} /><input type="search" aria-label={tx("جست‌وجوی موضوع در دیاگرام")} value={query} onChange={e => setQuery(e.target.value)} placeholder={tx("پیداکردن موضوع در هر چهار مسیر…")} /></div><div className="zoom-tools"><button aria-label={tx("کوچک‌نمایی")} onClick={() => zoom(1 / 1.2)} disabled={camera.scale <= .4}><Minus size={17} /></button><output aria-label={tx("درصد بزرگ‌نمایی")}>{tx(fa(Math.round(camera.scale * 100)))}{tx("٪")}</output><button aria-label={tx("بزرگ‌نمایی")} onClick={() => zoom(1.2)} disabled={camera.scale >= 2}><Plus size={17} /></button><button onClick={reset}><Focus size={17} />{tx("اندازه صفحه")}</button></div></div>
    {tx(query && <div className="graph-results" aria-live="polite"><span>{tx(fa(matches.length))}{tx(" موضوع پیدا شد.")}</span>{tx(matches.map(n => <button key={n.id} onClick={() => jump(n)}>{tx(n.title)}</button>))}</div>)}
   </section>
   <div className="map-layout">
-   <section className="panel map-board">
+   <section className="panel map-board" data-tone={trackTones[track==='all'?'backend':track as Track]}>
     <div className="map-board-header"><span><ArrowDown size={16} />{tx(track === "all" ? "نمای کلی چهار مسیر" : tracks[track as Track])}</span><small>{tx(fa(laidOut.length))}{tx(" موضوع · ترتیب پیشنهادی یادگیری")}</small></div>
     <div ref={viewport} className={"map-viewport " + (grabbing ? "is-grabbing" : "")} role="region" aria-label={tx("بوم تعاملی نقشه")} tabIndex={0} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag} onLostPointerCapture={() => {
           drag.current = null;
@@ -251,13 +252,13 @@ export default function Diagram() {
               const pct = nodeProgress(n),
                 isParent = relation.parents.includes(n.id),
                 isChild = relation.children.includes(n.id);
-              return <button key={n.id} className={`graph-node map-node ${n.track} ${n.kind} ${selected === n.id ? "is-selected" : ""} ${related.has(n.id) ? "is-related" : ""}`} style={{
+              return <button key={n.id} data-tone={trackTones[n.kind==='project'?projectTrack(n.sourceId):n.track]} className={`graph-node map-node ${n.track} ${n.kind} ${selected === n.id ? "is-selected" : ""} ${related.has(n.id) ? "is-related" : ""}`} style={{
                 left: n.x,
                 top: n.y,
                 width: NODE_W,
                 height: NODE_H
               }} aria-label={tx(n.title + "؛ " + (n.kind === "project" ? "پروژه" : "مهارت"))} aria-pressed={selected === n.id} onClick={() => setSelected(n.id)}>
-       <span className="map-node-order">{tx(pct === 100 ? <Check size={16} /> : fa(n.index))}</span><span className="map-node-body"><strong className="graph-node-title">{tx(shortNames[n.sourceId] ?? n.title)}</strong><span className="graph-node-meta">{tx("هفته ")}{tx(fa(Math.min(...n.weeks)))}{tx(n.weeks.length > 1 ? " تا " + fa(Math.max(...n.weeks)) : "")}<span>{tx(fa(pct))}{tx("٪")}</span></span></span>{tx((isParent || isChild) && <small className="map-relationship">{tx(isParent ? "پیش‌نیاز" : "قدم بعد")}</small>)}
+       <span className="map-node-track"><TrackMark track={n.kind==='project'?projectTrack(n.sourceId):n.track}/></span><span className="map-node-order">{tx(pct === 100 ? <Check size={16} /> : fa(n.index))}</span><span className="map-node-body"><strong className="graph-node-title">{tx(shortNames[n.sourceId] ?? n.title)}</strong><span className="graph-node-meta">{tx("هفته ")}{tx(fa(Math.min(...n.weeks)))}{tx(n.weeks.length > 1 ? " تا " + fa(Math.max(...n.weeks)) : "")}<span>{tx(fa(pct))}{tx("٪")}</span></span></span>{tx((isParent || isChild) && <small className="map-relationship">{tx(isParent ? "پیش‌نیاز" : "قدم بعد")}</small>)}
       </button>;
             }))}
      </div>
@@ -266,7 +267,7 @@ export default function Diagram() {
     <p className="map-explanation">{tx("خط‌ها شاخه‌بندی پیشنهادی یادگیری را نشان می‌دهند. پیش‌نیازهای مشترک و ارتباط با شاخه‌های دیگر در پنل هر موضوع آمده‌اند. این ترتیب قفل اجباری ایجاد نمی‌کند.")}</p>
    </section>
    <aside className="map-detail graph-detail" aria-label={tx("جزئیات موضوع انتخابی")} aria-live="polite">
-    {tx(chosen ? <section className="panel"><div className="split"><Tag track={chosen.track} /><button aria-label={tx("پاک‌کردن انتخاب")} onClick={() => setSelected("")}><X size={16} /></button></div><h2>{tx(chosen.title)}</h2><p className="muted">{tx(chosen.kind === "project" ? "پروژه با معیار پذیرش و راهنمای ساخت" : "مهارت مرتبط با درس‌ها و تمرین‌های مسیر")}</p><Meter value={nodeProgress(chosen)} label={chosen.kind === "project" ? "پیشرفت تحویل پروژه" : "شواهد یادگیری این مهارت"} />{tx(chosen.kind === "skill" && <Link className="text-link" to={"skill/" + chosen.sourceId}>{tx("دیدن شواهد و درس‌های این مهارت ↗")}</Link>)}{tx(chosen.kind === "skill" && <p className="muted">{tx("این امتیاز از تکمیل، مطالعه، تمرین و توضیح درس‌ها و خروجی پروژه‌های مرتبط به‌روز می‌شود؛ خودارزیابی شخصی جداست.")}</p>)}
+    {tx(chosen ? <section className="panel topic-detail" data-tone={trackTones[chosen.kind==='project'?projectTrack(chosen.sourceId):chosen.track]}><div className="split"><Tag track={chosen.kind==='project'?projectTrack(chosen.sourceId):chosen.track} /><button aria-label={tx("پاک‌کردن انتخاب")} onClick={() => setSelected("")}><X size={16} /></button></div><h2>{tx(chosen.title)}</h2><p className="muted">{tx(chosen.kind === "project" ? "پروژه با معیار پذیرش و راهنمای ساخت" : "مهارت مرتبط با درس‌ها و تمرین‌های مسیر")}</p><Meter value={nodeProgress(chosen)} label={chosen.kind === "project" ? "پیشرفت تحویل پروژه" : "شواهد یادگیری این مهارت"} />{tx(chosen.kind === "skill" && <Link className="text-link" to={"skill/" + chosen.sourceId}>{tx("دیدن شواهد و درس‌های این مهارت ↗")}</Link>)}{tx(chosen.kind === "skill" && <p className="muted">{tx("این امتیاز از تکمیل، مطالعه، تمرین و توضیح درس‌ها و خروجی پروژه‌های مرتبط به‌روز می‌شود؛ خودارزیابی شخصی جداست.")}</p>)}
      <h3>{tx("پیش‌نیازهای مستقیم")}</h3>{tx(relation.parents.length ? <ul className="map-related">{tx(linkButtons(relation.parents))}</ul> : <p className="muted">{tx("نقطه شروع این شاخه است.")}</p>)}
      <h3>{tx("قدم‌های بعدی و کاربرد")}</h3>{tx(relation.children.length ? <ul className="map-related">{tx(linkButtons(relation.children))}</ul> : <p className="muted">{tx("خروجی این بخش را در پروژه و پورتفولیو نشان بده.")}</p>)}
      <h3>{tx("هفته‌های مرتبط")}</h3><div className="button-row">{tx(chosen.weeks.map(n => <Link key={n} className="chip" to={"week/" + n}>{tx("هفته ")}{tx(fa(n))}</Link>))}</div><div className="graph-detail-actions"><Link className="primary full" to={chosen.kind === "project" ? "project/" + chosen.sourceId : "week/" + chosen.weeks[0]}>{tx(chosen.kind === "project" ? "بازکردن راهنمای پروژه" : "شروع درس‌های مرتبط")}<ArrowLeft size={15} /></Link>{tx(chosen.kind === "skill" && <Link className="outline full" to="skills">{tx("ثبت سطح و شاهد مهارت")}</Link>)}</div>
