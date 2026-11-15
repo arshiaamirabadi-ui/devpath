@@ -17,12 +17,14 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          cache: gradle
       - run: npm ci
       - run: npm test
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run android:sync
       - name: Ensure Android SDK 36
-        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" </dev/null'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "platform-tools" </dev/null'
+      - run: echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
       - name: Build debug and unsigned release APKs
         working-directory: android
         run: |
