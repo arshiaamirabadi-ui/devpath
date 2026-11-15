@@ -1,5 +1,5 @@
 import {weeks} from './content';
-export const trailPoints=weeks.map((w,i)=>({x:200+Math.sin(i*.95)*88,y:110+i*138+(w.month-1)*84}));
+export const trailPoints=weeks.map((w,i)=>({x:200+Math.sin(i*.95)*88,y:200+i*138+(w.month-1)*100}));
 export const voyageStops=[0,4,8,12,16,25].map(i=>trailPoints[i]);
 const segment=(a:{x:number;y:number},b:typeof a)=>`C ${a.x} ${(a.y+b.y)/2} ${b.x} ${(a.y+b.y)/2} ${b.x} ${b.y}`;
 export function voyageGeometry(percent:number){

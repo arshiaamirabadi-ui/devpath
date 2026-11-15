@@ -14,6 +14,7 @@ import './language.css';
 import './sidebar.css';
 import './identity.css';
 import './mobile-experience.css';
+import './learning-calendar.css';
 import App from './App';
 async function start(){
  try{await prepareLocale(preferredLanguage())}catch{await prepareLocale('fa')}
