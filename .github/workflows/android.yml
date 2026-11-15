@@ -1,0 +1,71 @@
+name: Build Android APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run android:sync
+      - name: Ensure Android SDK 36
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" </dev/null'
+      - name: Build debug and unsigned release APKs
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleDebug assembleRelease
+      - name: Prepare local-signing bundle
+        run: |
+          mkdir -p android-build
+          BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          "$BUILD_TOOLS/zipalign" -f -p 4 android/app/build/outputs/apk/release/app-release-unsigned.apk android-build/DevPath-unsigned.apk
+          "$BUILD_TOOLS/zipalign" -c -p 4 android-build/DevPath-unsigned.apk
+          cp "$BUILD_TOOLS/lib/apksigner.jar" android-build/apksigner.jar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: devpath-android-unsigned
+          path: android-build/
+          retention-days: 14
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install emulator image
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'system-images;android-35;google_apis;x86_64' 'emulator' </dev/null
+          echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name devpath-test --package 'system-images;android-35;google_apis;x86_64' --device pixel_5 --force
+      - name: Launch Android emulator
+        run: |
+          "$ANDROID_HOME/emulator/emulator" -avd devpath-test -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -no-metrics > /tmp/devpath-emulator.log 2>&1 &
+          adb wait-for-device
+          for n in $(seq 1 80); do
+            if adb shell getprop sys.boot_completed | grep -q 1; then break; fi
+            sleep 3
+          done
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+          adb shell input keyevent 82
+      - name: Verify offline Android launch
+        run: bash scripts/android/smoke.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: devpath-android-smoke
+          path: android-smoke/
+          retention-days: 14

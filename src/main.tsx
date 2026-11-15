@@ -16,7 +16,9 @@ import './identity.css';
 import './mobile-experience.css';
 import './learning-calendar.css';
 import App from './App';
+import {initializeNative} from './native';
 async function start(){
+ void initializeNative().catch(error=>console.warn("Native integration unavailable",error));
  try{await prepareLocale(preferredLanguage())}catch{await prepareLocale('fa')}
  createRoot(document.getElementById('root')!).render(<React.StrictMode><LanguageProvider><StoreProvider><App/></StoreProvider></LanguageProvider></React.StrictMode>);
 }

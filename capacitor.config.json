@@ -1,0 +1,22 @@
+{
+  "appId": "io.github.arshiaamirabadi.devpath",
+  "appName": "DevPath",
+  "webDir": "dist",
+  "backgroundColor": "#111116",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https",
+    "hostname": "localhost",
+    "cleartext": false
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native",
+      "initialViewportFitValueHint": "auto",
+      "style": "DARK"
+    }
+  }
+}

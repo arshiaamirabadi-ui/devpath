@@ -6,6 +6,7 @@ import { ActivityRow, Empty, External, Link, Meter, Notes, Sessions, Tag, allAct
 import { PageHeading } from "./App";
 import LessonContent from "./lesson-loader";
 import ActivityImpact from "./ActivityImpact";
+import {saveBackup} from "./backup-export";
 import LearningCalendar from './LearningCalendar';
 import DailyAgenda from './DailyAgenda';
 import { Surface, trackTones, TrackMark } from "./ui";
@@ -281,17 +282,6 @@ export function ReviewPage() {
         }))) setMsg("مرور هفته ذخیره شد.");
       }}>{tx(([["learned", "چه چیزی یاد گرفتم؟"], ["built", "چه خروجی‌ای ساختم؟"], ["blocked", "کجا گیر کردم؟"], ["review", "چه چیزی را باید مرور کنم؟"], ["focus", "هفته بعد روی چه چیزی تمرکز کنم؟"]] as const).map(([k, l]) => <label key={k}>{tx(l)}<textarea aria-label={tx(l)} name={k} defaultValue={v[k]} maxLength={20000} /></label>))}<p className="muted">{tx("زمان واقعی از نشست‌ها محاسبه می‌شود. برای اصلاح، از صفحه برنامه امروز استفاده کن.")}</p><button className="primary" type="submit">{tx("ذخیره مرور هفته")}</button><span className="success" role="status">{tx(msg)}</span></form></section><section className="panel"><h2>{tx("پیشنهاد تمرکز بعدی")}</h2><p className="muted">{tx("این پیشنهاد با قواعد ساده و از کارهای باقی‌مانده ساخته می‌شود.")}</p>{tx(remaining.length ? <><p>{tx("پیش از افزودن کار تازه، این فعالیت‌ها را مرور کن:")}</p>{tx(remaining.slice(0, 3).map(a => <ActivityRow a={a} key={a.id} />))}</> : <p>{tx("فعالیت‌های اجباری این هفته تمام شده‌اند؛ معیارهای خروجی را بررسی کن و مهارت‌ها را با شاهد بسنج.")}</p>)}<Link className="text-link" to={"week/" + Math.min(26, number + 1)}>{tx("برنامه هفته بعد ")}<ArrowLeft size={16} /></Link></section></>;
 }
-function download(state: PersonalState) {
-  const blob = new Blob([JSON.stringify(state, null, 2)], {
-    type: "application/json"
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "devpath-backup-" + todayISO() + ".json";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 export function SettingsPage() {
   const {
     state,
@@ -303,6 +293,7 @@ export function SettingsPage() {
     [error, setError] = useState("");
   const schedule = buildSchedule(allActivities(), state.settings);
   const dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
+  const exportBackup=async()=>{try{await saveBackup(state);setMessage("فایل پشتیبان برای دانلود آماده شد.")}catch{setError("ذخیره یا اشتراک‌گذاری پشتیبان انجام نشد. دوباره تلاش کن.")}};
   return <><PageHeading eyebrow="برنامه‌ای که با زندگی تو هماهنگ است" title={tx("تنظیمات و پشتیبان")} description="اطلاعات فقط در همین مرورگر و دستگاه ذخیره می‌شوند. برای انتقال یا نگهداری امن، خروجی بگیر." /><section className="panel"><h2>{tx("زمان‌بندی مسیر")}</h2><form onSubmit={e => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
@@ -331,8 +322,7 @@ export function SettingsPage() {
             theme: e.target.value as "light" | "dark"
           }
         }))}><option value="light">{tx("روشن")}</option><option value="dark">{tx("تاریک")}</option></select></label></section><section className="panel"><h2>{tx("نسخه پشتیبان")}</h2><p>{tx("خروجی شامل تنظیمات، وضعیت فعالیت‌ها، زمان‌ها، یادداشت‌ها، مرورها، پروژه‌ها، منابع، مهارت‌ها و جابه‌جایی روزهاست. محتوای ثابت آموزشی در سورس برنامه قرار دارد.")}</p><div className="button-row"><button className="primary" onClick={() => {
-          download(state);
-          setMessage("فایل پشتیبان برای دانلود آماده شد.");
+          void exportBackup();
         }}><Download size={17} />{tx("خروجی JSON")}</button><label className="upload-button"><Upload size={17} />{tx("انتخاب فایل بازیابی")}<input aria-label={tx("فایل بازیابی JSON")} type="file" accept=".json,application/json" onChange={async e => {
             setError("");
             setPending(null);
@@ -350,7 +340,7 @@ export function SettingsPage() {
               setPending(null);
               setMessage("بازیابی با موفقیت انجام شد.");
             }
-          }}>{tx("تأیید جایگزینی تمام داده‌ها")}</button><button onClick={() => setPending(null)}>{tx("لغو بازیابی")}</button><button onClick={() => download(state)}>{tx("ابتدا خروجی داده فعلی")}</button></div></div>}</section><section className="panel"><h2>{tx("محاسبه‌ها و حریم خصوصی")}</h2><ul><li>{tx("پیشرفت = مجموع دقیقه تخمینی فعالیت‌های اجباری انجام‌شده ÷ مجموع دقیقه تخمینی اجباری؛ فعالیت مشترک یک‌بار شمرده می‌شود.")}</li><li>{tx("زمان واقعی = مجموع نشست‌های ثبت‌شده. تغییر تیک فعالیت روی آن اثر ندارد.")}</li><li>{tx("پیشرفت پروژه از چک‌لیست تحویل و سطح مهارت از ارزیابی شخصی مستقل به دست می‌آیند.")}</li><li>{tx("یادداشت یا داده شخصی به سرویس خارجی ارسال نمی‌شود. منابع بیرونی فقط با اقدام تو باز می‌شوند.")}</li><li>{tx("ذخیره‌سازی localStorage نسخه ۱ است. پاک‌کردن داده سایت در مرورگر، پیشرفت را حذف می‌کند. در حالت خصوصی مرورگر، ماندگاری تضمین نیست.")}</li><li>{tx("نمایش تاریخ شمسی و محاسبه روز جاری بر اساس Asia/Tehran است؛ تاریخ داخلی ISO ذخیره می‌شود.")}</li></ul></section><section className="panel danger-zone"><h2>{tx("بازنشانی پیشرفت")}</h2><p>{tx("تمام داده‌های شخصی حذف می‌شوند و تنظیمات فعلی حفظ می‌شوند. ابتدا خروجی بگیر.")}</p><button className="danger" onClick={() => {
+          }}>{tx("تأیید جایگزینی تمام داده‌ها")}</button><button onClick={() => setPending(null)}>{tx("لغو بازیابی")}</button><button onClick={()=>void exportBackup()}>{tx("ابتدا خروجی داده فعلی")}</button></div></div>}</section><section className="panel"><h2>{tx("محاسبه‌ها و حریم خصوصی")}</h2><ul><li>{tx("پیشرفت = مجموع دقیقه تخمینی فعالیت‌های اجباری انجام‌شده ÷ مجموع دقیقه تخمینی اجباری؛ فعالیت مشترک یک‌بار شمرده می‌شود.")}</li><li>{tx("زمان واقعی = مجموع نشست‌های ثبت‌شده. تغییر تیک فعالیت روی آن اثر ندارد.")}</li><li>{tx("پیشرفت پروژه از چک‌لیست تحویل و سطح مهارت از ارزیابی شخصی مستقل به دست می‌آیند.")}</li><li>{tx("یادداشت یا داده شخصی به سرویس خارجی ارسال نمی‌شود. منابع بیرونی فقط با اقدام تو باز می‌شوند.")}</li><li>{tx("ذخیره‌سازی localStorage نسخه ۱ است. پاک‌کردن داده سایت در مرورگر، پیشرفت را حذف می‌کند. در حالت خصوصی مرورگر، ماندگاری تضمین نیست.")}</li><li>{tx("نمایش تاریخ شمسی و محاسبه روز جاری بر اساس Asia/Tehran است؛ تاریخ داخلی ISO ذخیره می‌شود.")}</li></ul></section><section className="panel danger-zone"><h2>{tx("بازنشانی پیشرفت")}</h2><p>{tx("تمام داده‌های شخصی حذف می‌شوند و تنظیمات فعلی حفظ می‌شوند. ابتدا خروجی بگیر.")}</p><button className="danger" onClick={() => {
         if (confirm(tx("تمام پیشرفت، زمان‌ها، یادداشت‌ها، مرورها، پروژه‌ها و مهارت‌ها حذف شوند؟ این کار برگشت مستقیم ندارد."))) {
           const fresh = freshState();
           fresh.settings = state.settings;
