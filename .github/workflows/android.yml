@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      ANDROID_AVD_HOME: ${{ runner.temp }}/devpath-avd
+      ANDROID_AVD_HOME: /tmp/devpath-avd
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -80,3 +80,4 @@ jobs:
             android-smoke/
             /tmp/devpath-emulator.log
           retention-days: 14
+
