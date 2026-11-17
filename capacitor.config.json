@@ -13,6 +13,10 @@
     "cleartext": false
   },
   "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": true,
+      "providers": ["google.com"]
+    },
     "SystemBars": {
       "insetsHandling": "native",
       "initialViewportFitValueHint": "auto",

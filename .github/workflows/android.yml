@@ -9,6 +9,8 @@ jobs:
     timeout-minutes: 35
     env:
       ANDROID_AVD_HOME: /tmp/devpath-avd
+      ANDROID_VERSION_CODE: '2'
+      ANDROID_VERSION_NAME: '1.1.0'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

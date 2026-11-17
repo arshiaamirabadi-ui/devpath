@@ -1,0 +1,13 @@
+import {it,expect,vi,beforeEach} from 'vitest';
+const sdk=vi.hoisted(()=>({signInWithEmailAndPassword:vi.fn(),createUserWithEmailAndPassword:vi.fn(),sendPasswordResetEmail:vi.fn(),signInWithPopup:vi.fn(),signInWithCredential:vi.fn(),signOut:vi.fn(),nativeSignIn:vi.fn(),native:false}));
+vi.mock('firebase/app',()=>({getApps:()=>[{}],initializeApp:vi.fn()}));
+vi.mock('firebase/auth',()=>({getAuth:()=>({}),initializeAuth:()=>({}),indexedDBLocalPersistence:{},GoogleAuthProvider:class{static credential(token:string){return {token}}setCustomParameters(){}},onAuthStateChanged:vi.fn(),...sdk}));
+vi.mock('firebase/firestore',()=>({getFirestore:()=>({}),collection:vi.fn(),doc:vi.fn(),onSnapshot:vi.fn(),runTransaction:vi.fn()}));
+vi.mock('@capacitor/core',()=>({Capacitor:{isNativePlatform:()=>sdk.native,isPluginAvailable:()=>true}}));
+vi.mock('@capacitor-firebase/authentication',()=>({FirebaseAuthentication:{signInWithGoogle:sdk.nativeSignIn,signOut:vi.fn()}}));
+import {emailAuthentication,login} from './firebase-client';
+beforeEach(()=>{vi.clearAllMocks();sdk.native=false});
+it('uses Firebase email/password sign in and preserves the exact password',async()=>{sdk.signInWithEmailAndPassword.mockResolvedValue({});await emailAuthentication('signIn',' user@example.com ',' pass word ');expect(sdk.signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(),'user@example.com',' pass word ');expect(sdk.createUserWithEmailAndPassword).not.toHaveBeenCalled()});
+it('creates an account only on the explicit signup action',async()=>{sdk.createUserWithEmailAndPassword.mockResolvedValue({});await emailAuthentication('signUp','user@example.com','password');expect(sdk.createUserWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(),'user@example.com','password')});
+it('supports password recovery and propagates failed authentication',async()=>{await emailAuthentication('reset','user@example.com','');expect(sdk.sendPasswordResetEmail).toHaveBeenCalledWith(expect.anything(),'user@example.com');sdk.signInWithEmailAndPassword.mockRejectedValueOnce(Error('invalid-credential'));await expect(emailAuthentication('signIn','user@example.com','bad')).rejects.toThrow('invalid-credential')});
+it('uses Google popup on web and native Google credentials on Android',async()=>{await login();expect(sdk.signInWithPopup).toHaveBeenCalledOnce();sdk.native=true;sdk.nativeSignIn.mockResolvedValue({credential:{idToken:'test-token'}});await login();expect(sdk.signInWithCredential).toHaveBeenCalledWith(expect.anything(),{token:'test-token'})});

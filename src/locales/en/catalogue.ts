@@ -10,8 +10,9 @@ import systems from './systems.json';
 import projects from './projects.json';
 import curriculum from './curriculum.json';
 import ui from './ui.json';
+import {accountEntries} from './account';
 const pair=(source:string[],target:string[]):[string,string][]=>{
  if(source.length!==target.length)throw new Error('Incomplete English catalogue');
  return source.map((text,index)=>[text,target[index]]);
 };
-export const entries=[...pair(backendSource,backend),...pair(aiSource,ai),...pair(systemsSource,systems),...pair(projectsSource,projects),...pair(curriculumSource,curriculum),...pair(uiSource,ui)];
+export const entries=[...pair(backendSource,backend),...pair(aiSource,ai),...pair(systemsSource,systems),...pair(projectsSource,projects),...pair(curriculumSource,curriculum),...pair(uiSource,ui),...accountEntries];

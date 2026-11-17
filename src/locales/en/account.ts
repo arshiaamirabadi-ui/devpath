@@ -1,0 +1,23 @@
+export const accountEntries:[string,string][]=[
+ ['در حالت مهمان اطلاعات روی دستگاه ذخیره می‌شوند؛ با ورود به حساب، بین دستگاه‌ها سینک می‌شوند.','Guest data stays on this device; signing in syncs account data across devices.'],
+ ['این جایگزینی به حساب و دستگاه‌های دیگر هم منتقل می‌شود. ابتدا سینک و تعارض‌ها را تکمیل کن.','This replacement also affects your account and other devices. Finish syncing and resolve conflicts first.'],
+ ['در حالت مهمان داده‌ها محلی‌اند. پس از ورود، اطلاعات حساب برای سینک در Firebase ذخیره می‌شوند. انتقال داده مهمان نیاز به تأیید دارد.','Guest data stays local. After sign-in, account data is stored in Firebase for sync. Importing guest data requires confirmation.'],
+ ['تمام داده‌های شخصی حذف می‌شوند و تنظیمات فعلی حفظ می‌شوند. در حالت ورود، حذف به حساب و دستگاه‌های دیگر هم منتقل می‌شود. ابتدا خروجی بگیر.','All personal data is deleted and current settings are kept. When signed in, deletion also syncs to your account and other devices. Export a backup first.'],
+ ['اطلاعات خوانده یا ذخیره نشد. از داده‌ها پشتیبان بگیر؛ ذخیره‌سازی دستگاه را بررسی کن.','Data could not be read or saved. Back up your data and check device storage.'],
+ ['ارتباط با فضای ابری برقرار نشد. اینترنت و تنظیمات Firebase را بررسی کن.','Could not connect to cloud storage. Check your internet connection and Firebase settings.'],
+ ['سینک انجام نشد؛ تغییرات روی این دستگاه محفوظ‌اند. دوباره تلاش کن.','Sync failed; changes are saved on this device. Try again.'],
+ ['داده مهمان معتبر نیست؛ انتقال انجام نشد.','Guest data is invalid; nothing was imported.'],
+ ['وضعیت ورود دریافت نشد. اتصال اینترنت را بررسی و صفحه را دوباره باز کن.','Could not check sign-in status. Check your connection and reopen the page.'],
+ ['راه‌اندازی Firebase انجام نشد. تنظیمات پروژه را بررسی کن.','Firebase could not start. Check the project settings.'],
+ ['ورود لغو شد. داده‌های دستگاه محفوظ‌اند.','Sign-in cancelled. Your device data is safe.'],
+ ['ورود انجام نشد. اینترنت، پنجره ورود و تنظیمات Google در Firebase را بررسی کن.','Sign-in failed. Check your connection, the sign-in window and Google settings in Firebase.'],
+ ['رمز عبور با شرایط امنیتی پروژه سازگار نیست.','The password does not meet the project password policy.'],
+ ['این ایمیل قبلاً ثبت شده؛ وارد شو یا رمز عبور را بازیابی کن.','This email is already registered. Sign in or reset your password.'],
+ ['ورود ایمیل و رمز عبور باید در Firebase فعال شود.','Enable email and password sign-in in Firebase.'],
+ ['تلاش‌های زیادی انجام شده؛ کمی بعد دوباره امتحان کن.','Too many attempts. Try again later.'],
+ ['اتصال اینترنت برقرار نشد؛ دوباره تلاش کن.','Could not connect to the internet. Try again.'],
+ ['ورود یا ساخت حساب انجام نشد. ایمیل و رمز عبور را بررسی کن.','Sign-in or account creation failed. Check your email and password.'],
+ ['خروج کامل نشد. دوباره تلاش کن.','Sign-out did not complete. Try again.'],
+ ['حساب متصل؛ سینک ابری','Account connected; cloud sync'],
+ ['تغییرات در انتظار سینک','Changes waiting to sync']
+];

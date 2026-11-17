@@ -3,6 +3,7 @@ import {createPortal} from 'react-dom';
 import {Code2,UserRound,X,type LucideIcon} from 'lucide-react';
 import {Link,Meter} from './components';
 import {tx} from './locale';
+import {useStore} from './store';
 import type {Tone} from './ui';
 
 type Item=readonly [string,string,LucideIcon];
@@ -21,6 +22,7 @@ function NavEntry({item,active,collapsed,tone,onNavigate}:{item:Item;active:bool
 }
 
 export default function Sidebar({items,route,open,collapsed,mobile,progress,onClose,onNavigate}:{items:readonly Item[];route:string;open:boolean;collapsed:boolean;mobile:boolean;progress:number;onClose:()=>void;onNavigate:()=>void}){
+ const {account,sync}=useStore();
  const ref=useRef<HTMLElement>(null);
  useEffect(()=>{if(open)(ref.current?.querySelector<HTMLElement>('.nav-link[aria-current="page"]')??ref.current?.querySelector<HTMLElement>('.mobile-close'))?.focus()},[open]);
  const keyboard=(event:KeyboardEvent<HTMLElement>)=>{
@@ -38,6 +40,6 @@ export default function Sidebar({items,route,open,collapsed,mobile,progress,onCl
    const path=item[0],active=route===path||(path==='roadmap'&&route.startsWith('week/'))||(path==='skills'&&route.startsWith('skill/'));
    return <NavEntry key={path} item={item} active={active} collapsed={collapsed} tone={tones[index]} onNavigate={onNavigate}/>;
   })}</nav>
-  <div className="sidebar-bottom"><div className="mini-path"><span className="eyebrow">{tx('هدف این مسیر')}</span><strong>Junior Backend Developer</strong><span>Go · PostgreSQL · REST · Docker</span><Meter value={progress} label="پیشرفت مسیر"/></div><div className="profile" title={tx('مسیر شخصی من')}><span className="avatar"><UserRound size={18} aria-hidden="true"/></span><span className="profile-copy">{tx('مسیر شخصی من')}<small>{tx('ذخیره روی همین دستگاه')}</small></span><span className="live-dot" title={tx('ذخیره محلی')}/></div></div>
+  <div className="sidebar-bottom"><div className="mini-path"><span className="eyebrow">{tx('هدف این مسیر')}</span><strong>Junior Backend Developer</strong><span>Go · PostgreSQL · REST · Docker</span><Meter value={progress} label="پیشرفت مسیر"/></div><div className="profile" title={tx('مسیر شخصی من')}><span className="avatar"><UserRound size={18} aria-hidden="true"/></span><span className="profile-copy">{tx('مسیر شخصی من')}<small>{tx(account.user?(sync.pending?'تغییرات در انتظار سینک':'حساب متصل؛ سینک ابری'):'ذخیره روی همین دستگاه')}</small></span><span className="live-dot" title={tx(account.user?'حساب متصل؛ سینک ابری':'ذخیره محلی')}/></div></div>
  </aside>;
 }

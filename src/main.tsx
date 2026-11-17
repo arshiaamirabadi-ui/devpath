@@ -16,6 +16,7 @@ import './identity.css';
 import './mobile-experience.css';
 import './learning-calendar.css';
 import './tablet.css';
+import './account.css';
 import App from './App';
 import {initializeNative} from './native';
 import {registerOfflineApp} from './pwa';

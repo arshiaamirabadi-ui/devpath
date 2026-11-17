@@ -1,0 +1,33 @@
+// Prototype rules. Review and verify before broadly distributing the app.
+// Data model: users/{authenticated uid}/records/{section~encoded id}
+// Each record has exactly one required field, value: bounded JSON string or
+// null (a deletion tombstone). Settings and lastActivity cannot be tombstones.
+// The application validates decoded payloads against PersonalState's Zod schema.
+// No public profiles, roles, counters, timestamps, or parent user documents.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() { return request.auth != null; }
+    function isOwner(uid) { return isAuthenticated() && request.auth.uid == uid; }
+    function isValidRecordId(id) {
+      return id.size() <= 1400 && (
+        id.matches('^(activities|notes|sessions|reviews|resources|skills|projects|planned)~.+$') ||
+        id in ['settings~startDate', 'settings~weeklyHours', 'settings~days', 'settings~theme', 'lastActivity~value']
+      );
+    }
+    function isValidSyncRecord(id, data) {
+      return isValidRecordId(id) && data.keys().hasAll(['value']) && data.keys().hasOnly(['value']) && (
+        (data.value is string && data.value.size() <= 100000) ||
+        (data.value == null && !id.matches('^(settings|lastActivity)~.*$'))
+      );
+    }
+    match /users/{uid}/records/{id} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid) && isValidSyncRecord(id, request.resource.data);
+      allow update: if isOwner(uid) && isValidSyncRecord(id, request.resource.data);
+      // Keep tombstones so offline devices cannot silently resurrect deletions.
+      allow delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

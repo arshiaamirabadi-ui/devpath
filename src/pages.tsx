@@ -10,6 +10,7 @@ import {saveBackup} from "./backup-export";
 import LearningCalendar from './LearningCalendar';
 import DailyAgenda from './DailyAgenda';
 import InstallGuide from './InstallGuide';
+import AccountPanel from './AccountPanel';
 import { Surface, trackTones, TrackMark } from "./ui";
 import { projectTrack } from "./learning";
 import { checklistGuides } from "./lessons";
@@ -287,15 +288,18 @@ export function SettingsPage() {
   const {
     state,
     update,
-    replace
+    replace,
+    account,
+    sync
   } = useStore();
   const [pending, setPending] = useState<PersonalState | null>(null),
     [message, setMessage] = useState(""),
     [error, setError] = useState("");
   const schedule = buildSchedule(allActivities(), state.settings);
+  const cloudBlocked=!!account.user&&(!sync.ready||Object.keys(sync.conflicts).length>0||sync.syncing);
   const dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
   const exportBackup=async()=>{try{await saveBackup(state);setMessage("فایل پشتیبان برای دانلود آماده شد.")}catch{setError("ذخیره یا اشتراک‌گذاری پشتیبان انجام نشد. دوباره تلاش کن.")}};
-  return <><PageHeading eyebrow="برنامه‌ای که با زندگی تو هماهنگ است" title={tx("تنظیمات و پشتیبان")} description="اطلاعات فقط در همین مرورگر و دستگاه ذخیره می‌شوند. برای انتقال یا نگهداری امن، خروجی بگیر." /><section className="panel"><h2>{tx("زمان‌بندی مسیر")}</h2><form onSubmit={e => {
+  return <><PageHeading eyebrow="برنامه‌ای که با زندگی تو هماهنگ است" title={tx("تنظیمات و پشتیبان")} description="در حالت مهمان اطلاعات روی دستگاه ذخیره می‌شوند؛ با ورود به حساب، بین دستگاه‌ها سینک می‌شوند." /><AccountPanel key={account.user?.uid??"guest"}/><section className="panel"><h2>{tx("زمان‌بندی مسیر")}</h2><form onSubmit={e => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const days = data.getAll("days").map(Number);
@@ -336,12 +340,12 @@ export function SettingsPage() {
               setError(err instanceof Error ? err.message : "فایل معتبر نیست.");
             }
             e.target.value = "";
-          }} /></label></div>{pending && <div className="restore-preview" role="region" aria-label={tx("پیش‌نمایش بازیابی")}><h3>{tx("پیش از جایگزینی بررسی کن")}</h3><p>{tx("تمام داده‌های شخصی فعلی با فایل جایگزین می‌شوند؛ ادغام انجام نمی‌شود.")}</p><table><thead><tr><th>{tx("داده")}</th><th>{tx("فعلی")}</th><th>{tx("فایل ورودی")}</th></tr></thead><tbody>{([["یادداشت", state.notes.length, pending.notes.length], ["نشست", state.sessions.length, pending.sessions.length], ["فعالیت با وضعیت", Object.keys(state.activities).length, Object.keys(pending.activities).length], ["مرور هفتگی", Object.keys(state.reviews).length, Object.keys(pending.reviews).length], ["پروژه", Object.keys(state.projects).length, Object.keys(pending.projects).length], ["مهارت", Object.keys(state.skills).length, Object.keys(pending.skills).length], ["منبع", Object.keys(state.resources).length, Object.keys(pending.resources).length], ["تاریخ دستی", Object.keys(state.planned).length, Object.keys(pending.planned).length]] as const).map(([l, a, b]) => <tr key={l}><td>{tx(l)}</td><td>{tx(fa(a))}</td><td>{tx(fa(b))}</td></tr>)}</tbody></table><p>{tx("تنظیمات ورودی: شروع ")}{tx(displayDate(pending.settings.startDate))}، {tx(fa(pending.settings.weeklyHours))}{tx(" ساعت در هفته، ")}{tx(fa(pending.settings.days.length))}{tx(" روز؛ ظاهر ")}{tx(pending.settings.theme === "dark" ? "تاریک" : "روشن")}.</p><div className="button-row"><button className="danger" onClick={() => {
+          }} /></label></div>{pending && <div className="restore-preview" role="region" aria-label={tx("پیش‌نمایش بازیابی")}><h3>{tx("پیش از جایگزینی بررسی کن")}</h3><p>{tx("تمام داده‌های شخصی فعلی با فایل جایگزین می‌شوند؛ ادغام انجام نمی‌شود.")}</p>{account.user&&<p role="note">{tx("این جایگزینی به حساب و دستگاه‌های دیگر هم منتقل می‌شود. ابتدا سینک و تعارض‌ها را تکمیل کن.")}</p>}<table><thead><tr><th>{tx("داده")}</th><th>{tx("فعلی")}</th><th>{tx("فایل ورودی")}</th></tr></thead><tbody>{([["یادداشت", state.notes.length, pending.notes.length], ["نشست", state.sessions.length, pending.sessions.length], ["فعالیت با وضعیت", Object.keys(state.activities).length, Object.keys(pending.activities).length], ["مرور هفتگی", Object.keys(state.reviews).length, Object.keys(pending.reviews).length], ["پروژه", Object.keys(state.projects).length, Object.keys(pending.projects).length], ["مهارت", Object.keys(state.skills).length, Object.keys(pending.skills).length], ["منبع", Object.keys(state.resources).length, Object.keys(pending.resources).length], ["تاریخ دستی", Object.keys(state.planned).length, Object.keys(pending.planned).length]] as const).map(([l, a, b]) => <tr key={l}><td>{tx(l)}</td><td>{tx(fa(a))}</td><td>{tx(fa(b))}</td></tr>)}</tbody></table><p>{tx("تنظیمات ورودی: شروع ")}{tx(displayDate(pending.settings.startDate))}، {tx(fa(pending.settings.weeklyHours))}{tx(" ساعت در هفته، ")}{tx(fa(pending.settings.days.length))}{tx(" روز؛ ظاهر ")}{tx(pending.settings.theme === "dark" ? "تاریک" : "روشن")}.</p><div className="button-row"><button className="danger" disabled={cloudBlocked} onClick={() => {
             if (replace(pending)) {
               setPending(null);
               setMessage("بازیابی با موفقیت انجام شد.");
             }
-          }}>{tx("تأیید جایگزینی تمام داده‌ها")}</button><button onClick={() => setPending(null)}>{tx("لغو بازیابی")}</button><button onClick={()=>void exportBackup()}>{tx("ابتدا خروجی داده فعلی")}</button></div></div>}</section><section className="panel"><h2>{tx("محاسبه‌ها و حریم خصوصی")}</h2><ul><li>{tx("پیشرفت = مجموع دقیقه تخمینی فعالیت‌های اجباری انجام‌شده ÷ مجموع دقیقه تخمینی اجباری؛ فعالیت مشترک یک‌بار شمرده می‌شود.")}</li><li>{tx("زمان واقعی = مجموع نشست‌های ثبت‌شده. تغییر تیک فعالیت روی آن اثر ندارد.")}</li><li>{tx("پیشرفت پروژه از چک‌لیست تحویل و سطح مهارت از ارزیابی شخصی مستقل به دست می‌آیند.")}</li><li>{tx("یادداشت یا داده شخصی به سرویس خارجی ارسال نمی‌شود. منابع بیرونی فقط با اقدام تو باز می‌شوند.")}</li><li>{tx("ذخیره‌سازی localStorage نسخه ۱ است. پاک‌کردن داده سایت در مرورگر، پیشرفت را حذف می‌کند. در حالت خصوصی مرورگر، ماندگاری تضمین نیست.")}</li><li>{tx("نمایش تاریخ شمسی و محاسبه روز جاری بر اساس Asia/Tehran است؛ تاریخ داخلی ISO ذخیره می‌شود.")}</li></ul></section><section className="panel danger-zone"><h2>{tx("بازنشانی پیشرفت")}</h2><p>{tx("تمام داده‌های شخصی حذف می‌شوند و تنظیمات فعلی حفظ می‌شوند. ابتدا خروجی بگیر.")}</p><button className="danger" onClick={() => {
+          }}>{tx("تأیید جایگزینی تمام داده‌ها")}</button><button onClick={() => setPending(null)}>{tx("لغو بازیابی")}</button><button onClick={()=>void exportBackup()}>{tx("ابتدا خروجی داده فعلی")}</button></div></div>}</section><section className="panel"><h2>{tx("محاسبه‌ها و حریم خصوصی")}</h2><ul><li>{tx("پیشرفت = مجموع دقیقه تخمینی فعالیت‌های اجباری انجام‌شده ÷ مجموع دقیقه تخمینی اجباری؛ فعالیت مشترک یک‌بار شمرده می‌شود.")}</li><li>{tx("زمان واقعی = مجموع نشست‌های ثبت‌شده. تغییر تیک فعالیت روی آن اثر ندارد.")}</li><li>{tx("پیشرفت پروژه از چک‌لیست تحویل و سطح مهارت از ارزیابی شخصی مستقل به دست می‌آیند.")}</li><li>{tx("در حالت مهمان داده‌ها محلی‌اند. پس از ورود، اطلاعات حساب برای سینک در Firebase ذخیره می‌شوند. انتقال داده مهمان نیاز به تأیید دارد.")}</li><li>{tx("ذخیره‌سازی localStorage نسخه ۱ است. پاک‌کردن داده سایت در مرورگر، پیشرفت را حذف می‌کند. در حالت خصوصی مرورگر، ماندگاری تضمین نیست.")}</li><li>{tx("نمایش تاریخ شمسی و محاسبه روز جاری بر اساس Asia/Tehran است؛ تاریخ داخلی ISO ذخیره می‌شود.")}</li></ul></section><section className="panel danger-zone"><h2>{tx("بازنشانی پیشرفت")}</h2><p>{tx("تمام داده‌های شخصی حذف می‌شوند و تنظیمات فعلی حفظ می‌شوند. در حالت ورود، حذف به حساب و دستگاه‌های دیگر هم منتقل می‌شود. ابتدا خروجی بگیر.")}</p><button className="danger" disabled={cloudBlocked} onClick={() => {
         if (confirm(tx("تمام پیشرفت، زمان‌ها، یادداشت‌ها، مرورها، پروژه‌ها و مهارت‌ها حذف شوند؟ این کار برگشت مستقیم ندارد."))) {
           const fresh = freshState();
           fresh.settings = state.settings;

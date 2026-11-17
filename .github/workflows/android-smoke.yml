@@ -16,7 +16,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       - name: Download published APK
-        run: curl --fail --location --retry 3 https://github.com/arshiaamirabadi-ui/devpath/releases/download/android-v1.0.0/DevPath-1.0.0.apk --output DevPath.apk
+        run: curl --fail --location --retry 3 https://github.com/arshiaamirabadi-ui/devpath/releases/download/android-v1.1.0/DevPath-1.1.0.apk --output DevPath.apk
       - name: Prepare emulator
         run: |
           mkdir -p "$ANDROID_AVD_HOME"
