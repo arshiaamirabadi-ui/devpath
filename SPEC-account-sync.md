@@ -1,10 +1,10 @@
-# Google account and cross-device sync
+# Account and cross-device sync
 
-Status: implemented locally; production activation and real web/Android Google login verification remain pending.
+Status: released in version 1.1.0 for web, the iPad web app and Android. Email/password authentication and account sync are available. Native Android Google sign-in requires separate platform configuration.
 
 ## Objective and scope
 
-Let a learner sign in with Google or email/password on the web and Android app and continue with the same personal data. First successful sign-in or explicit email signup creates the application account. Guest use and offline work remain available. Email signup, login, and password recovery were explicitly requested during implementation.
+Let a learner sign in with Google or email/password on the web and Android app and continue with the same personal data. First successful sign-in or explicit email signup creates the application account. Guest use and offline work remain available. Email authentication includes account creation, sign-in and password recovery.
 
 Sync the existing PersonalState fields: settings, activities, sessions, notes, reviews, resources, skills, projects, planned dates, and last activity. Static curriculum and device installation state are not account data.
 
@@ -14,9 +14,9 @@ Sync the existing PersonalState fields: settings, activities, sessions, notes, r
 - src/logic.ts defines PersonalState and validates backups with stateSchema.
 - src/store.tsx persists rahgo.personal.v1 in localStorage and listens for same-browser storage events.
 - src/pages.tsx contains settings, JSON backup/restore, and reset controls.
-- There is no authentication service or server database in this repository.
+- Firebase Authentication manages accounts; Cloud Firestore stores account-scoped sync records.
 
-## Proposed behavior
+## Account behavior
 
 - Settings shows Google sign-in, account identity, sign-out, sync status, last successful sync, and retry on failure. UI follows the existing Persian/English language support.
 - Guest data stays on the device. Before uploading existing guest data into an account, show a preview and an explicit import action. Never silently replace an existing cloud account with a guest snapshot.
@@ -27,11 +27,11 @@ Sync the existing PersonalState fields: settings, activities, sessions, notes, r
 - Existing JSON backup/export remains available, including before guest import, restore, or conflict resolution.
 - Authentication uses the provider-supported browser flow on web and a supported external/native flow on Android. Cancellation and failed callbacks preserve local data.
 
-## Proposed service and open decisions
+## Backend configuration
 
-The user approved Firebase Authentication and Cloud Firestore and supplied project devpath-e0b3c and Web app ID 1:624308802056:web:35a2cba4915f99198b37bd. Public Web app configuration is in src/firebase-config.ts, with environment overrides. Provider documentation and official Firebase agent skills were consulted.
+Firebase Authentication and Cloud Firestore provide the backend. Public client configuration is defined in src/firebase-config.ts and can be overridden through the environment variables listed in .env.example.
 
-Production activation requires enabling email/password and Google authentication, creating or selecting the actual Firestore database, deploying firestore.rules, authorizing web domains, and Android application registration/signing certificate configuration. CLI administrative login is not available yet. Do not put private service credentials in frontend code or version control.
+A deployment requires enabled authentication providers, a Firestore database and deployed firestore.rules. Google sign-in additionally needs authorized web domains and platform-specific Android application and signing certificate configuration. Private service credentials must never be included in frontend code or version control.
 
 ## Security boundaries
 
@@ -47,7 +47,7 @@ Production activation requires enabling email/password and Google authentication
 2. Add account-scoped persistence, guest import preview, durable pending changes, and record-level sync metadata.
 3. Add authenticated cloud storage and ownership rules, conflict handling, and deletion tracking.
 4. Connect account controls and sync status to settings; update privacy and setup instructions.
-5. Verify regression behavior locally and verify live sign-in/sync on two devices once cloud configuration is supplied.
+5. Verify regression behavior locally and verify live sign-in/sync on two devices for each configured deployment.
 
 ## Code style and project structure
 
